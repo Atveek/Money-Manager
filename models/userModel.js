@@ -16,6 +16,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "password is required"],
     },
+    customers: [
+      {
+        customer: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "customer",
+        },
+      },
+    ],
+    suppliers: [
+      {
+        supplier: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "supplier",
+        },
+      },
+    ],
   },
   { timestamps: true }
 );
