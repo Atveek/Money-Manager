@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 //schema design
-const customerSchema = new mongoose.Schema(
+const supplierSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -27,5 +27,5 @@ const customerSchema = new mongoose.Schema(
 );
 
 //export
-const customerModel = mongoose.model("customer", customerSchema);
-module.exports = customerModel;
+const supplierModel = mongoose.model("supplier", supplierSchema);
+module.exports = supplierModel;
