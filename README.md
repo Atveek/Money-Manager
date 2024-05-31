@@ -40,16 +40,16 @@ Money Expense Tracker is a versatile tool designed to help individuals and small
   Create a .env file in the root directory and add the following:
    ```bash
         PORT = 8080
-         MONGO_URL = "mongodb://127.0.0.1/expenses"
-        secret = "expense2"
-```
+        MONGO_URL = mongodb localhost url
+        secret = jwt secret key
+  ```
 3. Install dependencies:
       ```bash
       npm install
 4.Start the server:
-  ```bash
+   ```bash
     npm start
-```
+  ```
 5. Install dependencies of client:
       ```bash
       cd client
