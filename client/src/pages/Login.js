@@ -19,7 +19,13 @@ const Login = () => {
         "user",
         JSON.stringify({ ...data.user, password: "" })
       );
-      navigate("/");
+      localStorage.setItem(
+        "token",
+        JSON.stringify({ token: data.token, password: "" })
+      );
+      console.log(data.token);
+      if (data.user.role === "personal") navigate("/personal");
+      else navigate("/business");
     } catch (error) {
       setLoading(false);
       message.error("something went wrong");
@@ -37,7 +43,9 @@ const Login = () => {
       <div className="login-page ">
         {loading && <Spinner />}
         <div className="row container">
-          <h1><center>Expense Management System</center></h1>
+          <h1>
+            <center>Money Manager</center>
+          </h1>
           <div className="col-md-6">
             <img src={img} alt="login-img" width={"100%"} height="100%" />
           </div>

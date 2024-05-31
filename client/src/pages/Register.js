@@ -1,56 +1,109 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, message } from "antd";
+import { Form, Input, message, Select } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Spinner from "../components/Spinner";
 import "../styles/RegisterPage.css";
+import "../styles/Loginpage.css";
+import img from "./login.jpg";
+
 const Register = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  //from submit
+  const [selectedRole, setSelectedRole] = useState("personal"); // State to handle selected role
+
+  // Form submission handler
   const submitHandler = async (values) => {
     try {
       setLoading(true);
       await axios.post("/api/v1/users/register", values);
-      message.success("Registeration Successfull");
+      message.success("Registration Successful");
       setLoading(false);
       navigate("/login");
     } catch (error) {
       setLoading(false);
-      message.error("something went wrong");
+      message.error("Something went wrong");
     }
   };
 
-  //prevent for login user
+  // Check if user is already logged in
   useEffect(() => {
-    if (localStorage.getItem("user")) {
-      navigate("/");
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      if (user.role === "personal") {
+        navigate("/personal");
+      } else {
+        navigate("/business");
+      }
     }
   }, [navigate]);
+
   return (
     <>
-      <div className="register-page ">
+      <div className="login-page ">
         {loading && <Spinner />}
-        <Form
-          className="register-form"
-          layout="vertical"
-          onFinish={submitHandler}
-        >
-          <h2>Register Form</h2>
-          <Form.Item label="Name" name="name">
-            <Input type="text" required />
-          </Form.Item>
-          <Form.Item label="Email" name="email">
-            <Input type="email" required />
-          </Form.Item>
-          <Form.Item label="Password" name="password">
-            <Input type="password" required />
-          </Form.Item>
-          <div className="d-flex justify-content-between">
-            <Link to="/login">Already Register? login here!</Link>
-            <button className="btn ">Resgiter</button>
+        <div className="row container">
+          <h1>
+            <center>Money Manager</center>
+          </h1>
+          <div className="col-md-6">
+            <img src={img} alt="login-img" width={"100%"} height="100%" />
           </div>
-        </Form>
+          <div className="col-md-4 login-form">
+            <Form
+              // className="register-form"
+              // layout="vertical"
+              onFinish={submitHandler}
+            >
+              <h2>Register Form</h2>
+              <Form.Item
+                label="Name"
+                name="name"
+                rules={[{ required: true, message: "Please enter your name" }]}
+              >
+                <Input type="text" />
+              </Form.Item>
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    type: "email",
+                    message: "Please enter a valid email address",
+                  },
+                ]}
+              >
+                <Input type="email" />
+              </Form.Item>
+              <Form.Item
+                label="Password"
+                name="password"
+                rules={[
+                  { required: true, message: "Please enter your password" },
+                ]}
+              >
+                <Input type="password" />
+              </Form.Item>
+              <Form.Item
+                label="Role"
+                name="role"
+                rules={[{ required: true, message: "Please select a role" }]}
+              >
+                <Select value={selectedRole} onChange={setSelectedRole}>
+                  <Select.Option value="personal">Personal</Select.Option>
+                  <Select.Option value="business">Business</Select.Option>
+                </Select>
+              </Form.Item>
+              <div className="d-flex justify-content-between">
+                <Link to="/login">Already registered? Login here!</Link>
+                <button className="btn" type="submit">
+                  Register
+                </button>
+              </div>
+            </Form>
+          </div>
+        </div>
       </div>
     </>
   );

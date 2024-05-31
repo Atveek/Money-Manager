@@ -1,0 +1,31 @@
+.download-container {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.date-inputs {
+  margin-bottom: 10px;
+}
+
+.date-inputs label {
+  margin-right: 10px;
+}
+
+.download-buttons button {
+  margin-right: 10px;
+  padding: 8px 16px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.download-buttons {
+  margin: 0px 10px;
+}
+.download-buttons button:hover {
+  background-color: #0056b3;
+}

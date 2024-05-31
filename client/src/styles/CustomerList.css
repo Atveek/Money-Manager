@@ -1,0 +1,120 @@
+/* styles.css */
+
+.overflowhandle {
+  overflow-y: scroll;
+  height: 65vh;
+}
+.customer-container {
+  display: flex;
+}
+
+.customer-sidebar {
+  width: 100%;
+  background-color: #f0f0f0;
+  padding: 20px 20px 0px;
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+}
+
+/* Atveek
+ */
+/* .customer-list {
+  list-style-type: none;
+  padding: 0;
+} */
+
+.customer-list li {
+  display: flex;
+  align-items: center;
+}
+
+.customer-name {
+  flex-grow: 1;
+}
+
+.arrow {
+  width: 30px;
+  height: 30px;
+  background-color: rgb(124, 137, 151);
+  text-align: center;
+  border-radius: 5px;
+  /* margin-left: 10px; */
+}
+
+.customer-list {
+  height: 78vh;
+  width: 100%;
+  overflow-y: scroll;
+  list-style-type: none;
+  padding: 0;
+}
+::-webkit-scrollbar {
+  width: 10px; /* Set the width of the scrollbar */
+}
+
+/* Track (the area on which the thumb runs) */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Set the background color of the track */
+}
+
+/* Thumb (the draggable scrollbar handle) */
+::-webkit-scrollbar-thumb {
+  background: #888; /* Set the color of the scrollbar handle */
+  border-radius: 5px; /* Set the border radius of the scrollbar handle */
+}
+
+/* On hover, do something */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Set the color of the scrollbar handle on hover */
+}
+
+.customer-list li {
+  cursor: pointer;
+  display: flex;
+  padding: 10px;
+  font-size: 19px;
+  border-bottom: 1px solid #ccc;
+}
+
+.customer-list li:hover {
+  background-color: #e0e0e0;
+}
+
+.chat {
+  flex: 1;
+  padding: 20px;
+}
+
+.chat-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.chat-messages {
+  height: 300px;
+  overflow-y: auto;
+}
+
+.chat-messages p {
+  margin: 0;
+}
+
+.add-customer {
+  padding: 5px 30px;
+  background-color: #9c9c9c;
+}
+
+.givegot {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  margin: auto;
+}
+
+.givegot > button {
+  padding: 10px 90px;
+  border-radius: 10px;
+  margin: 0px 0px 0px 30px;
+}

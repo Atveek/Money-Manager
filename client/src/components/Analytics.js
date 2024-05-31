@@ -26,12 +26,13 @@ const Analytics = ({ allTransection }) => {
     (totalIncomeTransactions.length / totalTransaction) * 100;
   const totalExpensePercent =
     (totalExpenseTransactions.length / totalTransaction) * 100;
-
+  
   //total turnover
   const totalTurnover = allTransection.reduce(
     (acc, transaction) => acc + transaction.amount,
     0
   );
+  
   const totalIncomeTurnover = allTransection
     .filter((transaction) => transaction.type === "income")
     .reduce((acc, transaction) => acc + transaction.amount, 0);

@@ -20,7 +20,10 @@ const Header = () => {
   };
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-light">
+      <nav
+        className="navbar navbar-expand-lg bg-light"
+        style={{ position: "sticky", top: "0px" }}
+      >
         <div className="container-fluid">
           <button
             className="navbar-toggler"
@@ -34,8 +37,11 @@ const Header = () => {
             <span className="navbar-toggler-icon" />
           </button>
           <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <Link className="navbar-brand" to="/">
-              Expense Management App
+            <Link
+              className="navbar-brand"
+              to={loginUser.role === "personal" ? "/" : "/business"}
+            >
+              Money Manager
             </Link>
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
               <li className="nav-item">
