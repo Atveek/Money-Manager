@@ -1,7 +1,20 @@
-# Money Expense Tracker
+# Money Expense Tracker <a href="https://money-manager-ochre.vercel.app" target="_blank" >money-manager-ochre.vercel.app</a>
 
 ## Overview
 Money Expense Tracker is a versatile tool designed to help individuals and small businesses manage their finances. It allows users to track expenses, monitor budgets, and view detailed financial reports. For small businesses, it offers additional features to manage profit, supply, and customer details, making it a comprehensive solution for financial tracking and management.
+
+## Demo account
+- **Personal User**
+  ```
+  username - demo@gmail.com
+  password - demo@012
+  ```
+- **business Acount User**
+  ```
+  username - demo2@gmail.com
+  password - demo@012
+  ```
+  
 
 ## Features
 - **Expense Management:**
