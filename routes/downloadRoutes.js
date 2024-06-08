@@ -6,6 +6,8 @@ const fs = require("fs");
 const transectionModel = require("../models/transectionModel");
 const customerModel = require("../models/customerModel");
 const supplierModel = require("../models/supplierModel");
+const puppeteer = require("puppeteer");
+
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -108,18 +110,26 @@ router.get("/csv", async (req, res) => {
 
 // Endpoint to handle downloading transactions as PDF
 // Endpoint to handle downloading transactions as PDF
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const year = date.getFullYear();
+  return `${year}-${month}-${day}`;
+}
+
 router.get("/pdf", async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
-    console.log(startDate, endDate);
     const startDateObj = startDate ? startDate : null;
     const endDateObj = endDate ? endDate : null;
     const customerId = req.headers.customerid;
     const supplierId = req.headers.supplierid;
-    console.log(startDateObj, endDateObj);
     let transactions = [];
     let customer;
     let supplier;
+
     if (customerId) {
       customer = await customerModel.findById(customerId);
       if (!customer) {
@@ -148,7 +158,6 @@ router.get("/pdf", async (req, res) => {
       if (!supplier) {
         return res.status(404).json({ error: "Supplier not found" });
       }
-      console.log(supplier.name);
       transactions = await Promise.all(
         supplier.transections.map(async (transactionId) => {
           const transaction = await transectionModel.findById({
@@ -181,36 +190,36 @@ router.get("/pdf", async (req, res) => {
     htmlContent += "<h1>Invoice</h1>";
     if (customer) {
       htmlContent += `<span style="
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    font-size:25px;
-    padding: 10px;
-    text-align: center;
-    border-radius: 100%;
-    color: wheat;
-    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-    margin-right: 20px;
-  ">
-    ${customer.name[0]}
-  </span>
-  ${customer.name}`;
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        font-size:25px;
+        padding: 10px;
+        text-align: center;
+        border-radius: 100%;
+        color: wheat;
+        background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+        margin-right: 20px;
+      ">
+        ${customer.name[0]}
+      </span>
+      ${customer.name}`;
     } else if (supplier) {
       htmlContent += `<span style="
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    font-size:25px;
-    padding: 10px;
-    text-align: center;
-    border-radius: 100%;
-    color: wheat;
-    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-    margin-right: 20px;
-  ">
-    ${supplier.name[0]}
-  </span>
-  ${supplier.name}`;
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        font-size:25px;
+        padding: 10px;
+        text-align: center;
+        border-radius: 100%;
+        color: wheat;
+        background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+        margin-right: 20px;
+      ">
+        ${supplier.name[0]}
+      </span>
+      ${supplier.name}`;
     }
     htmlContent +=
       "<ul style:'width:600px; text-align:center; overflow:hidden;'>";
@@ -242,7 +251,6 @@ router.get("/pdf", async (req, res) => {
 
     htmlContent += "</ul>";
 
-    // Calculate total amount
     const totalAmount = filteredTransactions.reduce(
       (acc, curr) => acc + (curr.type === "gave" ? -curr.amount : +curr.amount),
       0
@@ -253,23 +261,26 @@ router.get("/pdf", async (req, res) => {
     }</p>`;
     htmlContent += "</div>";
 
-    pdf.create(htmlContent).toBuffer((err, buffer) => {
-      if (err) {
-        console.error("Error generating PDF:", err);
-        return res.status(500).send("Error generating PDF");
-      }
+    const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+    const page = await browser.newPage();
+    await page.setContent(htmlContent);
+    const pdfBuffer = await page.pdf({ format: "A4" });
 
-      res.setHeader(
-        "Content-disposition",
-        "attachment; filename=transactions.pdf"
-      );
-      res.set("Content-Type", "application/pdf");
-      res.status(200).send(buffer);
-    });
+    await browser.close();
+
+    res.setHeader(
+      "Content-disposition",
+      "attachment; filename=transactions.pdf"
+    );
+    res.set("Content-Type", "application/pdf");
+    res.status(200).send(pdfBuffer);
   } catch (error) {
     console.error("Error downloading PDF file:", error);
     res.status(500).json({ error: "Error downloading PDF file" });
   }
 });
+
+module.exports = router;
+
 
 module.exports = router;

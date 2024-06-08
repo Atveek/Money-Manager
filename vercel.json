@@ -1,17 +1,27 @@
-
 {
-    "builds": [
-      {
-        "src": "server.js",
-        "use": "@vercel/node"
-      },
-      {
-        "src": "build/**",
-        "use": "@vercel/static"
-      }
-    ],
-    "rewrites":[
-      {"source":"/(.*)","destination":"server.js"}
-    ]
-
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "build/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/server.js"
+    }
+  ],
+  "functions": {
+    "api/**/*.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
+  "env": {
+    "PUPPETEER_EXECUTABLE_PATH": "./node_modules/puppeteer/.local-chromium/linux-*/chrome-linux/chrome"
   }
+}
