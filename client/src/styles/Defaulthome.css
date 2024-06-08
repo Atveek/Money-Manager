@@ -1,8 +1,8 @@
 .atveek {
   margin: 0;
   font-family: "Roboto", sans-serif;
-  background: linear-gradient(to right bottom, #232526, #414345);
-  color: #eee;
+  background: linear-gradient(to right bottom, #ffffff, #f1f1f1); /* Changed background */
+  color: #000; /* Changed font color */
   overflow-x: hidden;
   transition: background 0.5s, color 0.5s;
 }
@@ -59,21 +59,26 @@
   margin: 50px 0;
   padding: 80px 20px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 40px rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.8); /* Updated background */
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.2); /* Updated shadow */
+  transition: transform 0.3s ease-in-out; /* Added animation */
+}
+
+.hero-section:hover {
+  transform: scale(1.02); /* Added scale on hover */
 }
 
 .hero-section h1 {
   font-size: 3.5em;
   margin-bottom: 20px;
   font-weight: bold;
-  color: #eee;
+  color: #333; /* Changed font color */
 }
 
 .hero-section p {
   font-size: 1.3em;
   margin-top: 20px;
-  color: #ccc;
+  color: #666; /* Changed font color */
 }
 
 .button-container {
@@ -87,16 +92,17 @@
   padding: 15px 30px;
   margin: 0 15px;
   text-decoration: none;
-  color: #555555;
-  background: #121212;
+  color: #fff; /* Changed font color */
+  background: #001f3f; /* Changed button color */
   border-radius: 5px;
   font-size: 1.2em;
   font-weight: bold;
-  transition: background 0.3s;
+  transition: background 0.3s, transform 0.3s; /* Added transform transition */
 }
 
 .button:hover {
-  background: #ffffff;
+  background: #001f3f; /* Changed hover background color */
+  transform: scale(1.1); /* Added scale on hover */
 }
 
 /* Feature section styles */
@@ -113,20 +119,21 @@
   margin: 20px;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-  transition: transform 0.3s ease-in-out;
-  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Changed shadow */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Added animation */
+  background: rgba(255, 255, 255, 0.8); /* Changed background */
 }
 
 .feature-card:hover {
   transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3); /* Enhanced hover shadow */
 }
 
 .feature-image img {
   /* max-width: 100%;
   max-height: 200px; */
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Changed shadow */
   width: 600px;
   height: 400px;
 }
@@ -136,14 +143,14 @@
 }
 
 .feature-description h2 {
-  color: #eee;
+  color: #333; /* Changed font color */
   font-size: 2em;
   margin-bottom: 10px;
   font-weight: bold;
 }
 
 .feature-description p {
-  color: #ccc;
+  color: #666; /* Changed font color */
   font-size: 1.2em;
 }
 
@@ -161,13 +168,14 @@
   margin: 20px;
   padding: 30px;
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-  transition: transform 0.3s ease-in-out;
-  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Changed shadow */
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Added animation */
+  background: rgba(255, 255, 255, 0.8); /* Changed background */
 }
 
 .benefit:hover {
   transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3); /* Enhanced hover shadow */
 }
 
 .benefit img {
@@ -175,28 +183,29 @@
   max-height: 150px; */
   border-radius: 10px;
   margin-bottom: 20px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Changed shadow */
   width: 300px;
   height: 200px;
 }
 
 .benefit h3 {
-  color: #eee;
+  color: #333; /* Changed font color */
   font-size: 2em;
   margin-bottom: 10px;
   font-weight: bold;
 }
 
 .benefit p {
-  color: #ccc;
+  color: #666; /* Changed font color */
   font-size: 1.2em;
 }
+
 /* Footer section styles */
 
 .footer {
-  background: linear-gradient(to right bottom, #232526, #414345);
+  background: linear-gradient(to right bottom, #ffffff, #f1f1f1); /* Changed background */
   padding: 40px 20px;
-  color: #eee;
+  color: #000; /* Changed font color */
   text-align: center;
   position: relative;
   margin-top: 50px;
@@ -232,13 +241,14 @@
 
 .social-icon {
   font-size: 1.8em;
-  color: #eee;
+  color: #000; /* Changed font color */
   margin: 0 15px;
-  transition: color 0.3s;
+  transition: color 0.3s, transform 0.3s; /* Added transform transition */
 }
 
 .social-icon:hover {
-  color: #000000;
+  color: #001f3f; /* Changed hover color */
+  transform: scale(1.2); /* Added scale on hover */
 }
 
 .footer-copyright {

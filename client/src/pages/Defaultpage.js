@@ -1,13 +1,8 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFacebook,
-  faTwitter,
-  faLinkedin,
-  faInstagram,
-} from "@fortawesome/free-brands-svg-icons";
+
 import { Link } from "react-router-dom";
 import "../styles/Defaulthome.css";
+import Footer from "../components/Layout/Footer";
 export default function Defaultpage() {
   return (
     <div className="atveek">
@@ -89,7 +84,7 @@ export default function Defaultpage() {
         {/* Your main content goes here */}
 
         {/* Professional Footer */}
-        <footer className="footer">
+        {/* <footer className="footer"> 
           <div className="footer-content">
             <div className="footer-section">
               <div className="footer-logo">
@@ -142,7 +137,8 @@ export default function Defaultpage() {
           <div className="footer-copyright">
             &copy; 2024 Money Manager. All rights reserved.
           </div>
-        </footer>
+         </footer> */}
+        <Footer />
       </div>
     </div>
   );
