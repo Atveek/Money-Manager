@@ -1,33 +1,21 @@
+
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "build/**",
-      "use": "@vercel/static"
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/server.js"
-    }
-  ],
-  "headers": [
-    {
-      "source": "/static/(.*).css",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/css"
-        }
-      ]
-    }
-  ],
-  "env": {
+    "builds": [
+      {
+        "src": "server.js",
+        "use": "@vercel/node"
+      },
+      {
+        "src": "build/**",
+        "use": "@vercel/static"
+      }
+
+    ],
+    "rewrites":[
+      {"source":"/(.*)","destination":"server.js"}
+    ],
+    "env": {
     "PUPPETEER_EXECUTABLE_PATH": "./node_modules/puppeteer/.local-chromium/linux-*/chrome-linux/chrome"
   }
-}
+
+  }
