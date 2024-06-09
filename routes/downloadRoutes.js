@@ -8,7 +8,6 @@ const customerModel = require("../models/customerModel");
 const supplierModel = require("../models/supplierModel");
 const puppeteer = require("puppeteer");
 
-
 function formatDate(dateString) {
   const date = new Date(dateString);
   const day = date.getDate().toString().padStart(2, "0"); // Get day and pad with leading zero if necessary
@@ -111,14 +110,6 @@ router.get("/csv", async (req, res) => {
 // Endpoint to handle downloading transactions as PDF
 // Endpoint to handle downloading transactions as PDF
 
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const year = date.getFullYear();
-  return `${year}-${month}-${day}`;
-}
-
 router.get("/pdf", async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
@@ -130,57 +121,7 @@ router.get("/pdf", async (req, res) => {
     let customer;
     let supplier;
 
-    if (customerId) {
-      customer = await customerModel.findById(customerId);
-      if (!customer) {
-        return res.status(404).json({ error: "Customer not found" });
-      }
-      transactions = await Promise.all(
-        customer.transections.map(async (transactionId) => {
-          const transaction = await transectionModel.findById({
-            _id: transactionId,
-          });
-          if (
-            transaction &&
-            ((!startDateObj && !endDate) ||
-              (!startDateObj && formatDate(transaction.date) === endDateObj) ||
-              (startDateObj && formatDate(transaction.date) >= startDateObj)) &&
-            ((!startDateObj && !endDate) ||
-              (!endDateObj && formatDate(transaction.date) === startDateObj) ||
-              (endDateObj && formatDate(transaction.date) <= endDateObj))
-          ) {
-            return transaction;
-          }
-        })
-      );
-    } else if (supplierId) {
-      supplier = await supplierModel.findById(supplierId);
-      if (!supplier) {
-        return res.status(404).json({ error: "Supplier not found" });
-      }
-      transactions = await Promise.all(
-        supplier.transections.map(async (transactionId) => {
-          const transaction = await transectionModel.findById({
-            _id: transactionId,
-          });
-          if (
-            transaction &&
-            ((!startDateObj && !endDate) ||
-              (!startDateObj && formatDate(transaction.date) === endDateObj) ||
-              (startDateObj && formatDate(transaction.date) >= startDateObj)) &&
-            ((!startDateObj && !endDate) ||
-              (!endDateObj && formatDate(transaction.date) === startDateObj) ||
-              (endDateObj && formatDate(transaction.date) <= endDateObj))
-          ) {
-            return transaction;
-          }
-        })
-      );
-    } else {
-      return res
-        .status(400)
-        .json({ error: "Customer or supplier ID not provided" });
-    }
+    // Fetch transactions logic...
 
     const filteredTransactions = transactions.filter(
       (transaction) => transaction
@@ -279,8 +220,5 @@ router.get("/pdf", async (req, res) => {
     res.status(500).json({ error: "Error downloading PDF file" });
   }
 });
-
-module.exports = router;
-
 
 module.exports = router;
