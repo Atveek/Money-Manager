@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "builds": [
     {
       "src": "server.js",
@@ -13,6 +14,17 @@
     {
       "source": "/(.*)",
       "destination": "/server.js"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/static/(.*).css",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/css"
+        }
+      ]
     }
   ],
   "env": {
