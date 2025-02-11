@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
 import Spinner from "../components/Spinner";
-import "../styles/Loginpage.css";
 import img from "./login.jpg";
+
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   //from submit
   const submitHandler = async (values) => {
     try {
@@ -38,38 +40,59 @@ const Login = () => {
       navigate("/");
     }
   }, [navigate]);
-  return (
-    <>
-      <div className="login-page ">
-        {loading && <Spinner />}
-        <div className="row container">
-          <h1>
-            <center>Money Manager</center>
-          </h1>
-          <div className="col-md-6">
-            <img src={img} alt="login-img" width={"100%"} height="100%" />
-          </div>
-          <div className="col-md-4 login-form">
-            <Form layout="vertical" onFinish={submitHandler}>
-              <h1>Login Form</h1>
 
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      {loading && <Spinner />}
+      <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="md:w-1/2">
+          <img
+            src={img}
+            alt="login-img"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="md:w-1/2 p-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h1 className="text-2xl font-bold text-center mb-4">
+              Money Manager
+            </h1>
+            <Form layout="vertical" onFinish={submitHandler}>
+              <h2 className="text-xl font-semibold mb-4">Login Form</h2>
               <Form.Item label="Email" name="email">
-                <Input type="email" required />
+                <Input
+                  type="email"
+                  required
+                  className="w-full px-4 py-2 border rounded-md"
+                />
               </Form.Item>
               <Form.Item label="Password" name="password">
-                <Input type="password" required />
+                <Input
+                  type="password"
+                  required
+                  className="w-full px-4 py-2 border rounded-md"
+                />
               </Form.Item>
-              <div className="d-flex justify-content-between">
-                <Link to="/register">
-                  Not a user ? Click Here to regsiter !
+              <div className="flex justify-between items-center mt-4">
+                <Link to="/register" className="text-blue-500 hover:underline">
+                  Not a user? Click Here to register!
                 </Link>
-                <button className="btn">Login</button>
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                >
+                  Login
+                </button>
               </div>
             </Form>
-          </div>
+          </motion.div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
