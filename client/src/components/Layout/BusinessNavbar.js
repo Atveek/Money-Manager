@@ -5,7 +5,7 @@ import "../../styles/BusinessNavbar.css";
 export default function BusinessNavbar() {
   return (
     <div className="sidebar">
-      <ul className="nav flex-column">
+      <ul className="nav flex-column text-xl">
         <Link className="nav-link" to="/business/">
           Home
         </Link>
@@ -17,6 +17,11 @@ export default function BusinessNavbar() {
         <li className="nav-item">
           <Link className="nav-link" to="/business/supplier">
             Supplier
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link" to="/business/bills">
+            Bills
           </Link>
         </li>
       </ul>

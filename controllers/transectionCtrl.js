@@ -3,6 +3,7 @@ const transectionModel = require("../models/transectionModel");
 const moment = require("moment");
 const userModel = require("../models/userModel");
 const supplierModel = require("../models/supplierModel");
+
 const getAllTransection = async (req, res) => {
   try {
     const { frequency, selectedDate, type } = req.body;
@@ -136,11 +137,15 @@ async function addCustomerTransaction(req, res) {
       ...req.body, // Spread the request body to populate other fields
     });
     const result = await newTransaction.save();
+
     await customerModel.findByIdAndUpdate(
       customerid,
       { $addToSet: { transections: result._id } },
       { new: true }
     );
+
+    
+
     res.status(201).send("Transaction Created");
   } catch (err) {
     console.error(err);

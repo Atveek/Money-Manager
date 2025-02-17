@@ -27,6 +27,7 @@ app.use("/api/v1/download", require("./routes/downloadRoutes"));
 app.use("/api/v1/transections", require("./routes/transectionRoutes"));
 app.use("/api/v1/customer", require("./routes/customerRoutes"));
 app.use("/api/v1/supplier", require("./routes/supplierRoutes"));
+app.use("/api/v1/gstBill", require("./routes/gstbillRoutes"));
 
 //static files
 app.use(express.static(path.join(__dirname, "./client/build")));
