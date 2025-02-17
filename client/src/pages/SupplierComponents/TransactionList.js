@@ -1,8 +1,39 @@
 import React, { useEffect, useState } from "react";
-
 import axios from "axios";
 import "../../styles/CustomerList.css";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { List, ListItem, ListItemText, IconButton } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles({
+  transactionList: {
+    maxHeight: "400px",
+    overflowY: "auto",
+    backgroundColor: "#f5f5f5",
+    borderRadius: "8px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    animation: "fadeIn 0.5s ease-in-out",
+  },
+  listItem: {
+    borderBottom: "1px solid #ddd",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  amount: {
+    fontSize: "1.2rem",
+  },
+  give: {
+    color: "#f44336",
+  },
+  got: {
+    color: "#4caf50",
+  },
+  "@keyframes fadeIn": {
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+  },
+});
 
 export default function TransactionList({
   selectedsupplier,
@@ -13,6 +44,7 @@ export default function TransactionList({
 }) {
   const [transections, setTransections] = useState([]);
   const token = JSON.parse(localStorage.getItem("token"));
+  const classes = useStyles();
 
   function sum(transactions) {
     let total = 0;
@@ -31,11 +63,12 @@ export default function TransactionList({
 
   function formatDate(dateString) {
     const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, "0"); // Get day and pad with leading zero if necessary
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Get month (adding 1 because January is 0) and pad with leading zero if necessary
-    const year = date.getFullYear().toString().slice(-2); // Get last two digits of the year
-    return `${day}-${month}-${year}`; // Return formatted date string
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear().toString().slice(-2);
+    return `${day}-${month}-${year}`;
   }
+
   useEffect(() => {
     async function getTransection() {
       try {
@@ -48,7 +81,6 @@ export default function TransactionList({
             },
           }
         );
-        // message.success("transection  success");
         setTransections(data);
         console.log(data);
       } catch (error) {
@@ -57,6 +89,7 @@ export default function TransactionList({
     }
     getTransection();
   }, [selectedsupplier, token.token]);
+
   sum(transections);
   loadtransectionfalse();
 
@@ -65,7 +98,7 @@ export default function TransactionList({
       await axios.post(
         `/api/v1/transections/delete-transection`,
         {
-          transacationId: transactionId, // Keep the same variable name as in the backend
+          transacationId: transactionId,
         },
         {
           headers: {
@@ -85,8 +118,8 @@ export default function TransactionList({
         (t) => t._id === transactionId
       );
       console.log(transactionToEdit);
-      setedit(transactionToEdit); // Set the transaction to edit in state
-      setopen(true); // Open the AddTransactionButton component
+      setedit(transactionToEdit);
+      setopen(true);
     } catch (error) {
       console.error("Error editing transaction:", error);
     }
@@ -94,57 +127,39 @@ export default function TransactionList({
 
   return (
     <div>
-      <ul className="overflowhandle">
+      <List className={classes.transactionList}>
         {transections &&
           Array.isArray(transections) &&
           transections.map((transaction) => (
-            <li
-              style={{
-                display: "grid",
-                gridAutoFlow: "column",
-                fontSize: "15px",
-                fontStyle: "bold",
-                borderBottom: "1px solid gray",
-                alignItems: "center",
-                margin: "0px",
-              }}
-              key={transaction._id}
-            >
-              <p style={{ margin: "0px" }}>
-                {transaction.description}
-                <br /> Date: {formatDate(transaction.date)}
-              </p>
-              <p
+            <ListItem key={transaction._id} className={classes.listItem}>
+              <ListItemText
+                primary={transaction.description}
+                secondary={`Date: ${formatDate(transaction.date)}`}
+              />
+              <ListItemText
+                primary={transaction.amount}
+                className={`${classes.amount} ${
+                  transaction.type === "give" ? classes.give : classes.got
+                }`}
                 style={{
                   textAlign: transaction.type === "give" ? "left" : "right",
-                  color: transaction.type === "give" ? "red" : "green",
-                  margin: "0px",
-                  padding: "5px",
-                  fontSize: "20px",
                 }}
-              >
-                {transaction.amount}
-              </p>
-              <p
-                style={{
-                  textAlign: "right",
-                }}
-              >
-                <EditOutlined
-                  onClick={() => {
-                    handleEditTransaction(transaction._id);
-                  }}
-                />
-                <DeleteOutlined
-                  className="mx-2"
-                  onClick={() => {
-                    handleDeleteTransaction(transaction._id);
-                  }}
-                />
-              </p>
-            </li>
+              />
+              <div className="flex items-center">
+                <IconButton
+                  onClick={() => handleEditTransaction(transaction._id)}
+                >
+                  <EditOutlined />
+                </IconButton>
+                <IconButton
+                  onClick={() => handleDeleteTransaction(transaction._id)}
+                >
+                  <DeleteOutlined />
+                </IconButton>
+              </div>
+            </ListItem>
           ))}
-      </ul>
+      </List>
     </div>
   );
 }

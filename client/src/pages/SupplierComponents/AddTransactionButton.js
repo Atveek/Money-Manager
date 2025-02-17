@@ -1,6 +1,35 @@
 import React, { useState, useEffect } from "react";
-import "../../styles/AddTransactionButton.css"; // Import CSS file for styling
+import "../../styles/AddTransactionButton.css";
 import axios from "axios";
+import { TextField, Button, Container } from "@mui/material";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles({
+  addTransactionContainer: {
+    padding: "20px",
+    backgroundColor: "#f5f5f5",
+    borderRadius: "8px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    animation: "fadeIn 0.5s ease-in-out",
+  },
+  transactionForm: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  transactionInput: {
+    marginBottom: "10px",
+  },
+  submitButton: {
+    marginTop: "10px",
+  },
+  closeButton: {
+    marginTop: "10px",
+  },
+  "@keyframes fadeIn": {
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+  },
+});
 
 function AddTransactionButton({
   type,
@@ -10,6 +39,7 @@ function AddTransactionButton({
   loadtransection,
   transactionToEdit,
 }) {
+  const classes = useStyles();
   const [transactionDetail, setTransactionDetail] = useState({
     amount: "",
     refrence: "",
@@ -23,10 +53,9 @@ function AddTransactionButton({
       const formattedDate = new Date(transactionToEdit.date)
         .toISOString()
         .split("T")[0];
-      // Parse the date string and format it as "yyyy-MM-dd"
       setTransactionDetail({
         ...transactionToEdit,
-        date: formattedDate, // Set the formatted date
+        date: formattedDate,
       });
     }
   }, [transactionToEdit]);
@@ -43,12 +72,11 @@ function AddTransactionButton({
     try {
       console.log(supplier._id, token);
       if (transactionToEdit) {
-        // If editing a transaction
         await axios.post(
           `/api/v1/transections/edit-transection`,
           {
-            transacationId: transactionToEdit._id, // Send the transaction ID for editing
-            payload: transactionDetail, // Send the updated transaction details as payload
+            transacationId: transactionToEdit._id,
+            payload: transactionDetail,
           },
           {
             headers: {
@@ -57,7 +85,6 @@ function AddTransactionButton({
           }
         );
       } else {
-        // If adding a new transaction
         await axios.post(
           "/api/v1/transections/supplier/transection",
           transactionDetail,
@@ -77,54 +104,70 @@ function AddTransactionButton({
     }
   };
 
-  const handleClose = () => {
-    // Close the form
-    onClose();
-  };
-
   return (
-    <div className="add-transaction-container">
-      <div className="transaction-form">
-        <input
-          className="transaction-input"
+    <Container className={classes.addTransactionContainer}>
+      <div className={classes.transactionForm}>
+        <TextField
+          className={classes.transactionInput}
           type="text"
           name="amount"
-          placeholder="Amount"
+          label="Amount"
           value={transactionDetail.amount}
           onChange={handleInputChange}
+          fullWidth
+          margin="normal"
         />
-        <input
-          className="transaction-input"
+        <TextField
+          className={classes.transactionInput}
           type="text"
           name="refrence"
-          placeholder="refrence"
+          label="Reference"
           value={transactionDetail.refrence}
           onChange={handleInputChange}
+          fullWidth
+          margin="normal"
         />
-        <input
-          className="transaction-input"
+        <TextField
+          className={classes.transactionInput}
           type="text"
           name="description"
-          placeholder="Description"
+          label="Description"
           value={transactionDetail.description}
           onChange={handleInputChange}
+          fullWidth
+          margin="normal"
         />
-        <input
-          className="transaction-input"
+        <TextField
+          className={classes.transactionInput}
           type="date"
           name="date"
-          placeholder="Date"
+          label="Date"
           value={transactionDetail.date}
           onChange={handleInputChange}
+          fullWidth
+          margin="normal"
+          InputLabelProps={{
+            shrink: true,
+          }}
         />
-        <button className="submit-button" onClick={handleSubmit}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}
+          className={classes.submitButton}
+        >
           Submit
-        </button>
-        <button className="close-button" onClick={handleClose}>
+        </Button>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={onClose}
+          className={classes.closeButton}
+        >
           Close
-        </button>
+        </Button>
       </div>
-    </div>
+    </Container>
   );
 }
 

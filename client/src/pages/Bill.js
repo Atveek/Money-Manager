@@ -1,6 +1,17 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import {
+  Button,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
+import { motion } from "framer-motion";
 
 const Bill = () => {
   const [billDetail, setBillDetail] = useState(null);
@@ -21,7 +32,6 @@ const Bill = () => {
           },
         });
 
-        console.log(result.data.bills);
         setBillDetail(...result.data.bills);
       } catch (error) {
         console.error("Error fetching bills:", error);
@@ -36,121 +46,45 @@ const Bill = () => {
     const printContent = document.getElementById("print-div");
     const printWindow = window.open("", "", "height=600,width=800");
     printWindow.document.write("<html><head><title>Print</title>");
-
     printWindow.document.write(`
       <style>
-        body {
-          font-family: Arial, sans-serif;
-        }
-        .border {
-          border: 1px solid #ddd;
-        }
-        .border-b-2 {
-          border-bottom-width: 2px;
-        }
-        .border-blue-600 {
-          border-color: #3182ce;
-        }
-        .bg-gray-100 {
-          background-color: #f7fafc;
-        }
-        .bg-blue-600 {
-          background-color: #3182ce;
-        }
-        .text-white {
-          color: #fff;
-        }
-        .text-blue-600 {
-          color: #3182ce;
-        }
-        .text-gray-600 {
-          color: #718096;
-        }
-        .font-bold {
-          font-weight: bold;
-        }
-        .font-semibold {
-          font-weight: 600;
-        }
-        .text-xl {
-          font-size: 1.25rem;
-        }
-        .text-2xl {
-          font-size: 1.5rem;
-        }
-        .text-lg {
-          font-size: 1.125rem;
-        }
-        .p-4 {
-          padding: 1rem;
-        }
-        .p-6 {
-          padding: 1.5rem;
-        }
-        .pb-4 {
-          padding-bottom: 1rem;
-        }
-        .pt-2 {
-          padding-top: 0.5rem;
-        }
-        .mt-2 {
-          margin-top: 0.5rem;
-        }
-        .mt-4 {
-          margin-top: 1rem;
-        }
-        .mt-6 {
-          margin-top: 1.5rem;
-        }
-        .mt-8 {
-          margin-top: 2rem;
-        }
-        .mx-auto {
-          margin-left: auto;
-          margin-right: auto;
-        }
-        .max-w-full {
-          max-width: 100%;
-        }
-        .shadow-md {
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .text-center {
-          text-align: center;
-        }
-        .flex {
-          display: flex;
-        }
-        .justify-between {
-          justify-content: space-between;
-        }
-        .justify-end {
-          justify-content: flex-end;
-        }
-        .cursor-pointer {
-          cursor: pointer;
-        }
-        .w-full {
-          width: 100%;
-        }
-        .w-80 {
-          width: 20rem;
-        }
-        .border-collapse {
-          border-collapse: collapse;
-        }
-        .border-gray-300 {
-          border-color: #e2e8f0;
-        }
-        .odd\\:bg-white:nth-child(odd) {
-          background-color: #fff;
-        }
-        .bg-white {
-          background-color: #fff;
-        }
-        .text-red-600 {
-          color: #e53e3e;
-        }
+        body { font-family: Arial, sans-serif; }
+        .border { border: 1px solid #ddd; }
+        .border-b-2 { border-bottom-width: 2px; }
+        .border-blue-600 { border-color: #3182ce; }
+        .bg-gray-100 { background-color: #f7fafc; }
+        .bg-blue-600 { background-color: #3182ce; }
+        .text-white { color: #fff; }
+        .text-blue-600 { color: #3182ce; }
+        .text-gray-600 { color: #718096; }
+        .font-bold { font-weight: bold; }
+        .font-semibold { font-weight: 600; }
+        .text-xl { font-size: 1.25rem; }
+        .text-2xl { font-size: 1.5rem; }
+        .text-lg { font-size: 1.125rem; }
+        .p-4 { padding: 1rem; }
+        .p-6 { padding: 1.5rem; }
+        .pb-4 { padding-bottom: 1rem; }
+        .pt-2 { padding-top: 0.5rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .mt-8 { margin-top: 2rem; }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .max-w-full { max-width: 100%; }
+        .shadow-md { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .text-center { text-align: center; }
+        .flex { display: flex; }
+        .justify-between { justify-content: space-between; }
+        .justify-end { justify-content: flex-end; }
+        .cursor-pointer { cursor: pointer; }
+        .w-full { width: 100%; }
+        .w-80 { width: 20rem; }
+        .border-collapse { border-collapse: collapse; }
+        .border-gray-300 { border-color: #e2e8f0; }
+        .odd\\:bg-white:nth-child(odd) { background-color: #fff; }
+        .bg-white { background-color: #fff; }
+        .text-red-600 { color: #e53e3e; }
       </style>
     `);
     printWindow.document.write("</head><body>");
@@ -175,30 +109,25 @@ const Bill = () => {
   }
 
   return (
-    <div>
-      <div className="flex w-full justify-between">
-        <h1>Bill</h1>
-        <div className="flex mb-2 gap-2">
-          <button
-            className="py-2 px-3 mt-3 bg-blue-800 text-xl text-white rounded-xl"
+    <div className="p-5">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Bill</h1>
+        <div className="flex gap-2">
+          <Button
+            variant="contained"
+            color="primary"
             onClick={() =>
               handleNavigate(`/business/bills/create/${params.id}`)
             }
           >
             Update Bill
-          </button>
-          <button
-            className="py-2 px-3 mt-3 bg-green-800 text-xl text-white rounded-xl"
-            onClick={handlePrint}
-          >
+          </Button>
+          <Button variant="contained" color="secondary" onClick={handlePrint}>
             Print Bill
-          </button>
+          </Button>
         </div>
       </div>
-      <div
-        className="max-w-full mx-auto bg-white p-6 border shadow-md"
-        id="print-div"
-      >
+      <Paper className="p-6 shadow-md" id="print-div">
         {/* Header Section */}
         <div className="flex justify-between border-b-2 border-blue-600 pb-4">
           <div>
@@ -225,44 +154,32 @@ const Bill = () => {
 
         {/* Items Table */}
         <div className="mt-6">
-          <table className="w-full border-collapse border border-gray-300">
-            <thead className="bg-blue-600 text-white">
-              <tr>
-                <th className="border border-gray-300 px-3 py-2">#</th>
-                <th className="border border-gray-300 px-3 py-2">Item</th>
-                <th className="border border-gray-300 px-3 py-2">Qty</th>
-                <th className="border border-gray-300 px-3 py-2">
-                  Discount (%)
-                </th>
-                <th className="border border-gray-300 px-3 py-2">GST (%)</th>
-                <th className="border border-gray-300 px-3 py-2">Amount (₹)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {billDetail?.items?.map((item, index) => (
-                <tr key={index} className="bg-gray-100 odd:bg-white">
-                  <td className="border border-gray-300 px-3 py-2">
-                    {index + 1}
-                  </td>
-                  <td className="border border-gray-300 px-3 py-2">
-                    {item.itemName}
-                  </td>
-                  <td className="border border-gray-300 px-3 py-2">
-                    {item.quantity}
-                  </td>
-                  <td className="border border-gray-300 px-3 py-2">
-                    {item.discount}
-                  </td>
-                  <td className="border border-gray-300 px-3 py-2">
-                    {item.gstPer}
-                  </td>
-                  <td className="border border-gray-300 px-3 py-2">
-                    ₹{item.amount}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead className="bg-blue-600 text-white">
+                <TableRow>
+                  <TableCell>#</TableCell>
+                  <TableCell>Item</TableCell>
+                  <TableCell>Qty</TableCell>
+                  <TableCell>Discount (%)</TableCell>
+                  <TableCell>GST (%)</TableCell>
+                  <TableCell>Amount (₹)</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {billDetail?.items?.map((item, index) => (
+                  <TableRow key={index} className="bg-gray-100 odd:bg-white">
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{item.itemName}</TableCell>
+                    <TableCell>{item.quantity}</TableCell>
+                    <TableCell>{item.discount}</TableCell>
+                    <TableCell>{item.gstPer}</TableCell>
+                    <TableCell>₹{item.amount}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
 
         {/* Summary Section */}
@@ -307,7 +224,7 @@ const Bill = () => {
           <p>2. Subject to City Jurisdiction.</p>
           <p>Company seal and sign</p>
         </div>
-      </div>
+      </Paper>
     </div>
   );
 };

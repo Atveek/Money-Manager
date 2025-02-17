@@ -81,7 +81,7 @@ const ProfitAnalysis = () => {
   };
 
   return (
-    <div style={{ display: "inline-block", width: "30vw" }}>
+    <div style={{ display: "inline-block", width: "25vw" }}>
       <div>
         <h2>
           {showMonthly ? "Monthly Profit Analysis" : "Yearly Profit Analysis"}

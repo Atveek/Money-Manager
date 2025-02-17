@@ -4,27 +4,35 @@ import "../../styles/BusinessNavbar.css";
 
 export default function BusinessNavbar() {
   return (
-    <div className="sidebar">
-      <ul className="nav flex-column text-xl">
-        <Link className="nav-link" to="/business/">
-          Home
-        </Link>
-        <li className="nav-item">
-          <Link className="nav-link" to="/business/customer">
+    <div className="min-h-screen flex flex-col w-64 bg-gray-800 text-white">
+      <div className="flex flex-col flex-grow">
+        <nav className="flex-1 px-2 py-4 space-y-1">
+          <Link
+            to="/business/"
+            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700"
+          >
+            Home
+          </Link>
+          <Link
+            to="/business/customer"
+            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700"
+          >
             Customer
           </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link" to="/business/supplier">
+          <Link
+            to="/business/supplier"
+            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700"
+          >
             Supplier
           </Link>
-        </li>
-        <li className="nav-item">
-          <Link className="nav-link" to="/business/bills">
+          <Link
+            to="/business/bills"
+            className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-700"
+          >
             Bills
           </Link>
-        </li>
-      </ul>
+        </nav>
+      </div>
     </div>
   );
 }

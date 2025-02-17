@@ -1,6 +1,17 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
+import { motion } from "framer-motion";
 
 const BusinessBills = () => {
   const [allBills, setAllBills] = useState([]);
@@ -30,50 +41,69 @@ const BusinessBills = () => {
   function handleNavigate(route) {
     navigator(route);
   }
+
   return (
-    <div style={{ padding: "20px" }}>
-      <div className="flex w-full justify-content-between mb-2">
-        <h1>Business Bills</h1>
-        <button
-          className="py-2 px-3 mt-3 bg-blue-800 text-xl text-white rounded-xl"
+    <div className="p-5">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Business Bills</h1>
+        <Button
+          variant="contained"
+          color="primary"
           onClick={() => handleNavigate("/business/bills/create")}
         >
           Create Bill
-        </button>
+        </Button>
       </div>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ background: "#f3f3f3", borderBottom: "2px solid #ccc" }}>
-            <th style={{ padding: "8px", textAlign: "left" }}>#</th>
-            <th style={{ padding: "8px", textAlign: "left" }}>Customer No</th>
-            <th style={{ padding: "8px", textAlign: "left" }}>Name</th>
-            <th style={{ padding: "8px", textAlign: "left" }}>Total Amount</th>
-          </tr>
-        </thead>
-        <tbody>
-          {allBills && allBills.length > 0 ? (
-            allBills.map((bill, index) => (
-              <tr
-                className="cursor-pointer"
-                key={bill._id || index}
-                style={{ borderBottom: "1px solid #ddd " }}
-                onClick={() => handleNavigate(`/business/bills/${bill._id}`)}
-              >
-                <td style={{ padding: "8px" }}>{index + 1}</td>
-                <td style={{ padding: "8px" }}>{bill.customerNo}</td>
-                <td style={{ padding: "8px" }}>{bill.name}</td>
-                <td style={{ padding: "8px" }}>{bill.totalAmount}</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="4" style={{ padding: "8px", textAlign: "center" }}>
-                No bills found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <TableContainer component={Paper} className="shadow-md">
+        <Table>
+          <TableHead>
+            <TableRow className="bg-gray-100">
+              <TableCell>#</TableCell>
+              <TableCell>Customer No</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Total Amount</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {allBills && allBills.length > 0 ? (
+              allBills.map((bill, index) => (
+                <TableRow
+                  key={bill._id || index}
+                  className="cursor-pointer"
+                  onClick={() => handleNavigate(`/business/bills/${bill._id}`)}
+                >
+                  <TableCell>
+                    <motion.div whileHover={{ scale: 1.02 }}>
+                      {index + 1}
+                    </motion.div>
+                  </TableCell>
+                  <TableCell>
+                    <motion.div whileHover={{ scale: 1.02 }}>
+                      {bill.customerNo}
+                    </motion.div>
+                  </TableCell>
+                  <TableCell>
+                    <motion.div whileHover={{ scale: 1.02 }}>
+                      {bill.name}
+                    </motion.div>
+                  </TableCell>
+                  <TableCell>
+                    <motion.div whileHover={{ scale: 1.02 }}>
+                      {bill.totalAmount}
+                    </motion.div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan="4" className="text-center">
+                  No bills found.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

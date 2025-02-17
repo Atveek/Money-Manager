@@ -4,28 +4,26 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 import Spinner from "../components/Spinner";
-import img from "./login.jpg";
+import img from "./bg.jpeg";
 
 const Register = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [selectedRole, setSelectedRole] = useState("personal");
 
-  // Form submission handler
   const submitHandler = async (values) => {
     try {
       setLoading(true);
       await axios.post("/api/v1/users/register", values);
-      message.success("Registration Successful");
+      message.success("Registration successful! Please login to continue.");
       setLoading(false);
       navigate("/login");
     } catch (error) {
       setLoading(false);
-      message.error("Something went wrong");
+      message.error("Registration failed. Please try again.");
     }
   };
 
-  // Check if user is already logged in
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
@@ -38,39 +36,53 @@ const Register = () => {
   }, [navigate]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center p-4">
       {loading && <Spinner />}
-      <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="md:w-1/2">
+      <div className="max-w-4xl w-full flex flex-col md:flex-row bg-white rounded-2xl shadow-xl overflow-hidden">
+        {/* Image Section */}
+        <div className="md:w-1/2 relative">
+          <div className="absolute " />
           <img
             src={img}
-            alt="register-img"
+            alt="Finance Management"
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="md:w-1/2 p-8">
+
+        {/* Form Section */}
+        <div className="md:w-1/2 p-8 lg:p-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6 }}
+            className="space-y-6"
           >
-            <h1 className="text-2xl font-bold text-center mb-4">
-              Money Manager
-            </h1>
-            <Form layout="vertical" onFinish={submitHandler}>
-              <h2 className="text-xl font-semibold mb-4">Register Form</h2>
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-bold text-gray-800">
+                Money Manager
+              </h1>
+              <p className="text-gray-600 mt-2">Create your account</p>
+            </div>
+
+            <Form
+              layout="vertical"
+              onFinish={submitHandler}
+              className="space-y-4"
+              initialValues={{ role: "personal" }}
+            >
               <Form.Item
-                label="Name"
+                label={<span className="text-gray-700 font-medium">Name</span>}
                 name="name"
                 rules={[{ required: true, message: "Please enter your name" }]}
               >
                 <Input
-                  type="text"
-                  className="w-full px-4 py-2 border rounded-md"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  placeholder="Enter your full name"
                 />
               </Form.Item>
+
               <Form.Item
-                label="Email"
+                label={<span className="text-gray-700 font-medium">Email</span>}
                 name="email"
                 rules={[
                   {
@@ -81,46 +93,63 @@ const Register = () => {
                 ]}
               >
                 <Input
-                  type="email"
-                  className="w-full px-4 py-2 border rounded-md"
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  placeholder="Enter your email"
                 />
               </Form.Item>
+
               <Form.Item
-                label="Password"
+                label={
+                  <span className="text-gray-700 font-medium">Password</span>
+                }
                 name="password"
                 rules={[
                   { required: true, message: "Please enter your password" },
+                  { min: 6, message: "Password must be at least 6 characters" },
                 ]}
               >
-                <Input
-                  type="password"
-                  className="w-full px-4 py-2 border rounded-md"
+                <Input.Password
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  placeholder="Create a secure password"
                 />
               </Form.Item>
+
               <Form.Item
-                label="Role"
+                label={
+                  <span className="text-gray-700 font-medium">
+                    Account Type
+                  </span>
+                }
                 name="role"
-                rules={[{ required: true, message: "Please select a role" }]}
+                rules={[
+                  { required: true, message: "Please select an account type" },
+                ]}
               >
                 <Select
                   value={selectedRole}
                   onChange={setSelectedRole}
-                  className="w-full px-4 py-2 border rounded-md"
-                >
-                  <Select.Option value="personal">Personal</Select.Option>
-                  <Select.Option value="business">Business</Select.Option>
-                </Select>
+                  className="w-full rounded-lg"
+                  options={[
+                    { value: "personal", label: "Personal Account" },
+                    { value: "business", label: "Business Account" },
+                  ]}
+                />
               </Form.Item>
-              <div className="flex justify-between items-center mt-4">
-                <Link to="/login" className="text-blue-500 hover:underline">
-                  Already registered? Login here!
-                </Link>
+
+              <div className="flex flex-col space-y-4 pt-4">
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                  className="w-full bg-black hover:bg-gray-700 text-white font-semibold py-3 rounded-lg transition-colors duration-200 transform hover:scale-[1.02]"
                 >
-                  Register
+                  Create Account
                 </button>
+
+                <Link
+                  to="/login"
+                  className="text-center text-black hover:text-gray-700 font-medium transition-colors"
+                >
+                  Already have an account? Sign in
+                </Link>
               </div>
             </Form>
           </motion.div>

@@ -5,6 +5,7 @@ import axios from "axios";
 import AddTransactionButton from "./AddTransactionButton";
 import TransactionList from "./TransactionList";
 import TransactionDownloader from "../TransactionDownloader";
+import { Button, Avatar, Typography, Container, Box } from "@mui/material";
 
 export default function SupplierDetail({
   addsupplier,
@@ -31,94 +32,62 @@ export default function SupplierDetail({
           },
         }
       );
-      message.success("add customer success");
-
+      message.success("Supplier added successfully");
       console.log(data);
       toggleaddsupplier();
       changesupplier(data);
     } catch (error) {
-      message.error("something went wrong");
+      message.error("Something went wrong");
     }
   };
 
-  console.log(load);
-  function loadtransection() {
-    setLoad(true);
-  }
-  function setopen(value) {
-    setIsOpen(value);
-  }
   function setedit(value) {
     setTransactionToEdit(value);
-  }
-  function loadtransectionfalse() {
-    setLoad(false);
   }
   function setsum(values) {
     setTotalsum(values);
   }
+
   return (
     <>
       {!addsupplier && selectedsupplier && (
-        <div className="chat">
-          <div
+        <Container className="chat">
+          <Box
             className="chat-header"
-            style={{
-              display: "flex",
-              direction: "ltr",
-              justifyContent: "space-between",
-            }}
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            <h3>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "50px",
-                  height: "50px",
-                  padding: "10px",
-                  textAlign: "center",
-                  borderRadius: "100%",
-                  color: "wheat",
-                  background:
-                    "linear-gradient(to right, #0f2027, #203a43, #2c5364)",
-                  marginRight: "20px",
-                }}
+            <Typography variant="h5" component="h3">
+              <Avatar
+                sx={{ width: 56, height: 56, marginRight: 2 }}
+                className="bg-gradient-to-r from-gray-800 via-gray-900 to-black text-wheat"
               >
                 {selectedsupplier.name[0]}
-              </span>
+              </Avatar>
               {selectedsupplier.name}
-            </h3>{" "}
-            <h3
-              style={{
-                display: "flex",
-              }}
-            >
-              <p
-                style={{
-                  display: "inline-block",
-                  padding: "10px",
-                  textAlign: "center",
-                  borderRadius: "10px",
-                  minWidth: "50px",
-                  margin: "0px",
-                  color: totalsum < 0 ? "red" : "green",
-                  background:
-                    "linear-gradient(to right, #0f2027, #203a43, #2c5364)",
-                }}
+            </Typography>
+            <Box display="flex" alignItems="center">
+              <Typography
+                variant="h6"
+                component="p"
+                className={`p-2 rounded-lg ${
+                  totalsum < 0 ? "text-red-500" : "text-green-500"
+                } bg-gradient-to-r from-gray-800 via-gray-900 to-black`}
               >
                 {totalsum < 0 ? 0 - totalsum : totalsum}
-              </p>
+              </Typography>
               <TransactionDownloader supplierid={selectedsupplier._id} />
-            </h3>
-          </div>
-          <br></br>
+            </Box>
+          </Box>
+          <br />
           {!isOpen && (
             <TransactionList
               setedit={setedit}
-              setopen={setopen}
+              setopen={setIsOpen}
               selectedsupplier={selectedsupplier}
               setsum={setsum}
-              loadtransectionfalse={loadtransectionfalse}
+              loadtransectionfalse={() => setLoad(false)}
             />
           )}
           {isOpen && (
@@ -126,43 +95,51 @@ export default function SupplierDetail({
               transactionToEdit={transactionToEdit}
               setedit={setedit}
               supplier={selectedsupplier}
-              loadtransection={loadtransection}
+              loadtransection={() => setLoad(true)}
               type={type}
               token={token.token}
               onClose={() => setIsOpen(false)}
             />
           )}
           {!isOpen && (
-            <div className="givegot">
-              <button
-                className="add-transaction-button"
+            <Box
+              className="givegot"
+              display="flex"
+              justifyContent="space-between"
+            >
+              <Button
+                variant="contained"
+                color="primary"
                 onClick={() => {
-                  setType("give");
+                  setType("gave");
                   setIsOpen(true);
                 }}
               >
                 You gave
-              </button>
-              <button
-                className="add-transaction-button"
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
                 onClick={() => {
-                  setType("got");
+                  setType("earn");
                   setIsOpen(true);
                 }}
               >
                 You got
-              </button>
-            </div>
+              </Button>
+            </Box>
           )}
-        </div>
+        </Container>
       )}
 
       {addsupplier && (
-        <div>
+        <Container>
           <Form layout="vertical" onFinish={submitHandler}>
-            <h1>Add Supplier Form</h1>
+            <Typography variant="h4" component="h1">
+              Add Supplier Form
+            </Typography>
             <Form.Item
-              label="name"
+              label="Name"
               name="name"
               rules={[
                 { required: true, message: "Please enter supplier name" },
@@ -190,17 +167,20 @@ export default function SupplierDetail({
             >
               <Input type="number" />
             </Form.Item>
-            <div className="d-flex justify-content-between">
-              <button className="btn btn-primary" type="submit">
+            <Box display="flex" justifyContent="space-between">
+              <Button variant="contained" color="primary" type="submit">
                 Add Supplier
-              </button>
-            </div>
+              </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={toggleaddsupplier}
+              >
+                Close
+              </Button>
+            </Box>
           </Form>
-          <br></br>
-          <button className="btn btn-primary" onClick={toggleaddsupplier}>
-            close
-          </button>
-        </div>
+        </Container>
       )}
     </>
   );

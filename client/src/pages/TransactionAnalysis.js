@@ -31,7 +31,7 @@ const TransactionAnalysis = () => {
   return (
     <div style={{ display: "inline-block" }}>
       <h2>Last 6 Months Customer Transaction Analysis</h2>
-      <div style={{ width: "45vw" }}>
+      <div style={{ width: "35vw" }}>
         {" "}
         {/* Set the width to 50% of the viewport width */}
         <ChartComponent data={monthlyData} />
