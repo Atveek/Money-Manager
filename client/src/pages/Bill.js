@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const Bill = () => {
@@ -32,20 +32,132 @@ const Bill = () => {
     getBills();
   }, [params.id]);
 
-  // Default company details
-  const CompanyAddress = "Default Company Address";
-  const CompanyNumber = "0000000000";
-  const email = "default@company.com";
-  const gstIn = "DefaultGSTIN";
-
   const handlePrint = () => {
-    const printContent = document.getElementById("print-div"); // Get the specific div
-    const printWindow = window.open("", "", "height=600,width=800"); // Open new print window
-    printWindow.document.write("<html><head><title>Print</title></head><body>");
-    printWindow.document.write(printContent.innerHTML); // Write the content of the div
+    const printContent = document.getElementById("print-div");
+    const printWindow = window.open("", "", "height=600,width=800");
+    printWindow.document.write("<html><head><title>Print</title>");
+
+    printWindow.document.write(`
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+        }
+        .border {
+          border: 1px solid #ddd;
+        }
+        .border-b-2 {
+          border-bottom-width: 2px;
+        }
+        .border-blue-600 {
+          border-color: #3182ce;
+        }
+        .bg-gray-100 {
+          background-color: #f7fafc;
+        }
+        .bg-blue-600 {
+          background-color: #3182ce;
+        }
+        .text-white {
+          color: #fff;
+        }
+        .text-blue-600 {
+          color: #3182ce;
+        }
+        .text-gray-600 {
+          color: #718096;
+        }
+        .font-bold {
+          font-weight: bold;
+        }
+        .font-semibold {
+          font-weight: 600;
+        }
+        .text-xl {
+          font-size: 1.25rem;
+        }
+        .text-2xl {
+          font-size: 1.5rem;
+        }
+        .text-lg {
+          font-size: 1.125rem;
+        }
+        .p-4 {
+          padding: 1rem;
+        }
+        .p-6 {
+          padding: 1.5rem;
+        }
+        .pb-4 {
+          padding-bottom: 1rem;
+        }
+        .pt-2 {
+          padding-top: 0.5rem;
+        }
+        .mt-2 {
+          margin-top: 0.5rem;
+        }
+        .mt-4 {
+          margin-top: 1rem;
+        }
+        .mt-6 {
+          margin-top: 1.5rem;
+        }
+        .mt-8 {
+          margin-top: 2rem;
+        }
+        .mx-auto {
+          margin-left: auto;
+          margin-right: auto;
+        }
+        .max-w-full {
+          max-width: 100%;
+        }
+        .shadow-md {
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .text-center {
+          text-align: center;
+        }
+        .flex {
+          display: flex;
+        }
+        .justify-between {
+          justify-content: space-between;
+        }
+        .justify-end {
+          justify-content: flex-end;
+        }
+        .cursor-pointer {
+          cursor: pointer;
+        }
+        .w-full {
+          width: 100%;
+        }
+        .w-80 {
+          width: 20rem;
+        }
+        .border-collapse {
+          border-collapse: collapse;
+        }
+        .border-gray-300 {
+          border-color: #e2e8f0;
+        }
+        .odd\\:bg-white:nth-child(odd) {
+          background-color: #fff;
+        }
+        .bg-white {
+          background-color: #fff;
+        }
+        .text-red-600 {
+          color: #e53e3e;
+        }
+      </style>
+    `);
+    printWindow.document.write("</head><body>");
+    printWindow.document.write(printContent.innerHTML);
     printWindow.document.write("</body></html>");
-    printWindow.document.close(); // Close the document
-    printWindow.print(); // Trigger the print dialog
+    printWindow.document.close();
+    printWindow.print();
   };
 
   function handleNavigate(route) {
@@ -77,7 +189,7 @@ const Bill = () => {
           </button>
           <button
             className="py-2 px-3 mt-3 bg-green-800 text-xl text-white rounded-xl"
-            onClick={handlePrint} // Corrected to trigger the print function
+            onClick={handlePrint}
           >
             Print Bill
           </button>
@@ -86,7 +198,6 @@ const Bill = () => {
       <div
         className="max-w-full mx-auto bg-white p-6 border shadow-md"
         id="print-div"
-        print-div // Attach the reference here
       >
         {/* Header Section */}
         <div className="flex justify-between border-b-2 border-blue-600 pb-4">
@@ -94,10 +205,10 @@ const Bill = () => {
             <h2 className="text-xl font-bold text-blue-600">
               Company / Seller Name
             </h2>
-            <p className="text-gray-600">Address: {CompanyAddress}</p>
-            <p className="text-gray-600">Phone No: +91-{CompanyNumber}</p>
-            <p className="text-gray-600">Email: {email}</p>
-            <p className="text-gray-600">GSTIN: {gstIn}</p>
+            <p className="text-gray-600">Address: Default Company Address</p>
+            <p className="text-gray-600">Phone No: +91-0000000000</p>
+            <p className="text-gray-600">Email: default@company.com</p>
+            <p className="text-gray-600">GSTIN: DefaultGSTIN</p>
           </div>
           <div className="text-right">
             <h1 className="text-2xl font-bold text-blue-600">Tax Invoice</h1>
