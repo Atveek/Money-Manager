@@ -2,15 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, message, Select } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
 import Spinner from "../components/Spinner";
-import "../styles/RegisterPage.css";
-import "../styles/Loginpage.css";
 import img from "./login.jpg";
 
 const Register = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [selectedRole, setSelectedRole] = useState("personal"); // State to handle selected role
+  const [selectedRole, setSelectedRole] = useState("personal");
 
   // Form submission handler
   const submitHandler = async (values) => {
@@ -39,29 +38,36 @@ const Register = () => {
   }, [navigate]);
 
   return (
-    <>
-      <div className="login-page ">
-        {loading && <Spinner />}
-        <div className="row container">
-          <h1>
-            <center>Money Manager</center>
-          </h1>
-          <div className="col-md-6">
-            <img src={img} alt="login-img" width={"100%"} height="100%" />
-          </div>
-          <div className="col-md-4 login-form">
-            <Form
-              // className="register-form"
-              // layout="vertical"
-              onFinish={submitHandler}
-            >
-              <h2>Register Form</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      {loading && <Spinner />}
+      <div className="flex flex-col md:flex-row bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="md:w-1/2">
+          <img
+            src={img}
+            alt="register-img"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="md:w-1/2 p-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h1 className="text-2xl font-bold text-center mb-4">
+              Money Manager
+            </h1>
+            <Form layout="vertical" onFinish={submitHandler}>
+              <h2 className="text-xl font-semibold mb-4">Register Form</h2>
               <Form.Item
                 label="Name"
                 name="name"
                 rules={[{ required: true, message: "Please enter your name" }]}
               >
-                <Input type="text" />
+                <Input
+                  type="text"
+                  className="w-full px-4 py-2 border rounded-md"
+                />
               </Form.Item>
               <Form.Item
                 label="Email"
@@ -74,7 +80,10 @@ const Register = () => {
                   },
                 ]}
               >
-                <Input type="email" />
+                <Input
+                  type="email"
+                  className="w-full px-4 py-2 border rounded-md"
+                />
               </Form.Item>
               <Form.Item
                 label="Password"
@@ -83,29 +92,41 @@ const Register = () => {
                   { required: true, message: "Please enter your password" },
                 ]}
               >
-                <Input type="password" />
+                <Input
+                  type="password"
+                  className="w-full px-4 py-2 border rounded-md"
+                />
               </Form.Item>
               <Form.Item
                 label="Role"
                 name="role"
                 rules={[{ required: true, message: "Please select a role" }]}
               >
-                <Select value={selectedRole} onChange={setSelectedRole}>
+                <Select
+                  value={selectedRole}
+                  onChange={setSelectedRole}
+                  className="w-full px-4 py-2 border rounded-md"
+                >
                   <Select.Option value="personal">Personal</Select.Option>
                   <Select.Option value="business">Business</Select.Option>
                 </Select>
               </Form.Item>
-              <div className="d-flex justify-content-between">
-                <Link to="/login">Already registered? Login here!</Link>
-                <button className="btn" type="submit">
+              <div className="flex justify-between items-center mt-4">
+                <Link to="/login" className="text-blue-500 hover:underline">
+                  Already registered? Login here!
+                </Link>
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                >
                   Register
                 </button>
               </div>
             </Form>
-          </div>
+          </motion.div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

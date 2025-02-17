@@ -42,3 +42,9 @@
 .filter-tab .ant-select-selector {
   width: 150px !important;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add any custom styles here */

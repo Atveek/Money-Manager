@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Tax Invoice</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+        }
+
+        .invoice-container {
+            width: 800px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px 30px;
+            border: 1px solid #ddd;
+        }
+
+        /* Header Section */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 2px solid #0070ad;
+            /* Blue border */
+            padding-bottom: 10px;
+        }
+
+        .company-details {
+            width: 50%;
+        }
+
+        .company-details h2 {
+            margin: 0 0 10px;
+            color: #0070ad;
+            /* Blue heading */
+        }
+
+        .invoice-title {
+            text-align: right;
+            width: 50%;
+        }
+
+        .invoice-title h1 {
+            margin: 0;
+            color: #0070ad;
+            font-size: 24px;
+        }
+
+        /* Addresses Section */
+        .address-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .address-box {
+            width: 48%;
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .address-box h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        /* Invoice Info Section */
+        .invoice-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .invoice-info div {
+            width: 48%;
+            background: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .invoice-info h4 {
+            margin: 0 0 5px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        /* Table Section */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table thead {
+            background: #0070ad;
+            color: #fff;
+        }
+
+        table thead th {
+            padding: 8px;
+            font-weight: normal;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        table tbody td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        /* Summary Section */
+        .summary-section {
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .summary-box {
+            width: 300px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background: #f9f9f9;
+        }
+
+        .summary-box p {
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .summary-box p span {
+            font-weight: bold;
+        }
+
+        .total-amount {
+            font-size: 16px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Footer Section */
+        .footer-section {
+            margin-top: 20px;
+            border-top: 2px solid #0070ad;
+            padding-top: 10px;
+            text-align: center;
+            color: #555;
+        }
+
+        .footer-section p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="invoice-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="company-details">
+                <h2>Company / Seller Name</h2>
+                <p>Address: {{CompanyAddress}}</p>
+                <p>Phone No: +91-{{CompanyNumber}}</p>
+                <p>Email:{{email}}</p>
+                <p>GSTIN:{{gstIn}}</p>
+            </div>
+            <div class="invoice-title">
+                <h1>Tax Invoice</h1>
+                <!-- You can place a logo or brand image here -->
+            </div>
+        </div>
+
+        <!-- Address Section -->
+        <div class="address-section">
+            <div class="address-box">
+                <h3>Bill To</h3>
+                <p><strong>{{name}}</strong></p>
+                <p>Address: 123 Street, City, State</p>
+                <p>Phone: +91-{{customerNo}}</p>
+            </div>
+
+        </div>
+
+        <!-- Items Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Discount (%)</th>
+                    <th>GST (%)</th>
+                    <th>Amount (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{itemsTable}}
+                <!-- Add more rows dynamically as needed -->
+            </tbody>
+        </table>
+
+        <!-- Summary Section -->
+        <div class="summary-section">
+            <div class="summary-box">
+                <p>
+                    <span>Sub Total</span>
+                    <span>₹1850</span>
+                </p>
+                <p>
+                    <span>Discount</span>
+                    <span>₹{{totalDiscount}}</span>
+                </p>
+                <p>
+                    <span>SGST</span>
+                    <span>₹{{totalGstAmount}}</span>
+                </p>
+                <p>
+                    <span>CGST</span>
+                    <span>₹{{totalGstAmount}}</span>
+                </p>
+                <p>
+                    <span>IGST</span>
+                    <span>₹0</span>
+                </p>
+                <div class="total-amount">
+                    <span>Total</span>
+                    <span>₹{{totalAmount}}</span>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Footer Section -->
+        <div class="footer-section">
+            <p><strong>Terms & Conditions</strong></p>
+            <p>1. Goods once sold will not be taken back.</p>
+            <p>2. Subject to City Jurisdiction.</p>
+            <p>Company seal and sign</p>
+        </div>
+    </div>
+</body>
+
+</html>

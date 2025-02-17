@@ -15,7 +15,6 @@ const authBuisness = (req, res, next) => {
     } else {
       if (user.role === "business") {
         req.user = user;
-        console.log(user);
         next();
       } else {
         console.log("role not found");

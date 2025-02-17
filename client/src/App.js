@@ -7,6 +7,9 @@ import BusinessLayout from "./components/Layout/BusinessLayout";
 import BusinessCustomer from "./pages/BusinessCustomer";
 import BusinessSupplier from "./pages/BusinessSupplier";
 import Defaultpage from "./pages/Defaultpage";
+import BusinessBills from "./pages/BusinessBills";
+import Bill from "./pages/Bill";
+import CreateBills from "./pages/CreateBills";
 
 function App() {
   return (
@@ -25,6 +28,38 @@ function App() {
         element={
           <Business>
             <BusinessHome />
+          </Business>
+        }
+      />
+      <Route
+        path="/business/bills"
+        element={
+          <Business>
+            <BusinessBills />
+          </Business>
+        }
+      />
+      <Route
+        path="/business/bills/create"
+        element={
+          <Business>
+            <CreateBills />
+          </Business>
+        }
+      />
+      <Route
+        path="/business/bills/create/:id"
+        element={
+          <Business>
+            <CreateBills />
+          </Business>
+        }
+      />
+      <Route
+        path="/business/bills/:id"
+        element={
+          <Business>
+            <Bill />
           </Business>
         }
       />
