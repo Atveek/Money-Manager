@@ -47,7 +47,7 @@ const DefaultPage = () => {
             className="text-5xl font-bold text-gray-800 mb-6"
             variants={itemVariants}
           >
-            Welcome to Money Manager
+            Welcome to Expense Ease
           </motion.h1>
           <motion.p
             className="text-xl text-gray-600 mb-8"
@@ -85,7 +85,7 @@ const DefaultPage = () => {
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-800 mb-4">
-              Why Choose Money Manager?
+              Why Choose Expense Ease?
             </h2>
             <p className="text-gray-600">
               Experience the future of personal finance management

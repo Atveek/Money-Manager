@@ -30,7 +30,7 @@ const Header = () => {
             className="text-xl font-semibold text-gray-800"
             to={loginUser.role === "personal" ? "/" : "/business"}
           >
-            Money Manager
+            Expense Ease
           </Link>
         </div>
         <div className="flex items-center space-x-4">

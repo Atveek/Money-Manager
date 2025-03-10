@@ -13,7 +13,7 @@ const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="flex flex-wrap justify-around text-center md:text-left">
           <div className="max-w-xs mb-6">
-            <h6 className="text-xl font-semibold">Money Manager</h6>
+            <h6 className="text-xl font-semibold">Expense Ease</h6>
             <p className="text-gray-400 text-sm">
               Manage your expenses efficiently and effortlessly.
             </p>
@@ -66,7 +66,7 @@ const Footer = () => {
       </div>
 
       <div className="text-center text-gray-500 text-sm py-4 border-t border-gray-700">
-        &copy; 2024 Money Manager. All rights reserved.
+        &copy; 2024 Expense Ease. All rights reserved.
       </div>
     </footer>
   );

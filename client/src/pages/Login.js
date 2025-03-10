@@ -59,7 +59,7 @@ const Login = () => {
             transition={{ duration: 0.5 }}
           >
             <h1 className="text-2xl font-bold text-center mb-4">
-              Money Manager
+              Expense Ease
             </h1>
             <Form layout="vertical" onFinish={submitHandler}>
               <h2 className="text-xl font-semibold mb-4">Login Form</h2>
