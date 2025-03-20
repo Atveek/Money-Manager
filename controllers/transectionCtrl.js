@@ -90,6 +90,8 @@ async function deleteTransection(req, res) {
 //   }
 // };
 
+console.log("hello");
+
 const editTransection = async (req, res) => {
   try {
     const transactionId = req.body.transacationId; // Corrected variable name
