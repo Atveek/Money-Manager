@@ -57,19 +57,23 @@ const registerController = async (req, res) => {
   }
 };
 
+
 async function totalcustomer(req, res) {
   try {
-    const user = req.user.userid;
+     const user = req.user.userid;
+
+    // Get the customer IDs
     const newUser = await userModel
-      .find({ _id: user })
+      .findOne({ _id: user })
       .select({ customers: 1 });
-    console.log(newUser);
-    const customerList = [];
-    for (const customer of newUser[0].customers) {
-      console.log(customer);
-      const customerDetail = await customerModel.find({ _id: customer });
-      customerList.push({ ...customerDetail });
-    }
+    const customerIds = newUser.customers;
+    console.log("customerIds :",customerIds)
+
+    // Fetch all customer details and sort by updatedAt descending
+    const customerList = await customerModel
+      .find({ _id: { $in: customerIds } })
+      .sort({ updatedAt: -1 });
+
     res.status(201).json({
       success: true,
       customerList,
@@ -79,19 +83,47 @@ async function totalcustomer(req, res) {
     res.status(400).json({ success: false, error: "Bad Request" });
   }
 }
+
+
+// async function totalsupplier(req, res) {
+//   try {
+//     const user = req.user.userid;
+//     const newUser = await userModel
+//       .find({ _id: user })
+//       .select({ suppliers: 1 });
+//     console.log(newUser);
+//     const supplierList = [];
+//     for (const supplier of newUser[0].suppliers) {
+//       console.log(supplier);
+//       const supplierDetail = await supplierModel.find({ _id: supplier });
+//       supplierList.push({ ...supplierDetail });
+//     }
+//     res.status(201).json({
+//       success: true,
+//       supplierList,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(400).json({ success: false, error: "Bad Request" });
+//   }
+// }
+
 async function totalsupplier(req, res) {
   try {
-    const user = req.user.userid;
+     const user = req.user.userid;
+
+    // Get the customer IDs
     const newUser = await userModel
-      .find({ _id: user })
+      .findOne({ _id: user })
       .select({ suppliers: 1 });
-    console.log(newUser);
-    const supplierList = [];
-    for (const supplier of newUser[0].suppliers) {
-      console.log(supplier);
-      const supplierDetail = await supplierModel.find({ _id: supplier });
-      supplierList.push({ ...supplierDetail });
-    }
+    const supplierIds = newUser.suppliers;
+    console.log("supplierIds :",supplierIds)
+
+    // Fetch all customer details and sort by updatedAt descending
+    const supplierList = await supplierModel
+      .find({ _id: { $in: supplierIds } })
+      .sort({ updatedAt: -1 });
+
     res.status(201).json({
       success: true,
       supplierList,
@@ -101,6 +133,7 @@ async function totalsupplier(req, res) {
     res.status(400).json({ success: false, error: "Bad Request" });
   }
 }
+
 
 module.exports = {
   loginController,

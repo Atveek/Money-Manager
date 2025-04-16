@@ -5,7 +5,7 @@ import ChartComponent from "./ChartComponent";
 const TransactionAnalysis = () => {
   const [monthlyData, setMonthlyData] = useState({});
   const token = JSON.parse(localStorage.getItem("token"));
-  const customertoken = token.token;
+  const customertoken = token?.token;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,11 +29,9 @@ const TransactionAnalysis = () => {
   }, [customertoken]);
 
   return (
-    <div style={{ display: "inline-block" }}>
+    <div style={{ padding: "20px" }}>
       <h2>Last 6 Months Customer Transaction Analysis</h2>
-      <div style={{ width: "45vw" }}>
-        {" "}
-        {/* Set the width to 50% of the viewport width */}
+      <div style={{ width: "100%", height: "70vh" }}>
         <ChartComponent data={monthlyData} />
       </div>
     </div>

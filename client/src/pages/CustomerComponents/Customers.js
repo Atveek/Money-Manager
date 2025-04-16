@@ -45,7 +45,7 @@ export default function Customers({
             </button>
           </li>
           {customers.map((customer) => (
-            <li key={customer[0]._id} onClick={() => clickevent(customer[0])}>
+            <li key={customer._id} onClick={() => clickevent(customer)}>
               <span className="customer-name">
                 <span
                   style={{
@@ -60,9 +60,9 @@ export default function Customers({
                       "linear-gradient(to right, #0f2027, #203a43, #2c5364)",
                   }}
                 >
-                  {customer[0].name[0]}
+                  {customer.name[0]}
                 </span>
-                {customer[0].name}
+                {customer.name}
               </span>
               <span className="arrow">&rarr;</span>
             </li>

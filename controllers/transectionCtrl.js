@@ -208,30 +208,51 @@ async function analyser(req, res) {
       return date;
     });
 
-    const monthlyData = {};
+    const monthlyDataArray = [];
+
     for (const date of lastFiveMonths) {
-      const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
-      const lastDayOfMonth = new Date(
-        date.getFullYear(),
-        date.getMonth() + 1,
-        0
-      );
+      const year = date.getFullYear();
+      const month = date.getMonth(); // 0-based
+
+      const firstDayOfMonth = new Date(year, month, 1);
+      const lastDayOfMonth = new Date(year, month + 1, 0);
 
       const transactions = await transectionModel.find({
-        type: { $in: ["gave","earn"] },
+        type: { $in: ["gave", "earn"] },
         userid: userId,
         date: { $gte: firstDayOfMonth, $lte: lastDayOfMonth },
       });
 
-     const earnAmount = transactions.filter(tx => tx.type === "earn").reduce((total, tx) => total + tx.amount, 0);
+      const earnAmount = transactions
+        .filter((tx) => tx.type === "earn")
+        .reduce((total, tx) => total + tx.amount, 0);
 
-      const gaveAmount = transactions.filter(tx => tx.type === "gave").reduce((total, tx) => total + tx.amount, 0);
+      const gaveAmount = transactions
+        .filter((tx) => tx.type === "gave")
+        .reduce((total, tx) => total + tx.amount, 0);
 
       const totalAmount = earnAmount - gaveAmount;
-      monthlyData[`${date.getMonth() + 1}-${date.getFullYear()}`] = totalAmount >= 0 ? earnAmount:gaveAmount;
+
+      monthlyDataArray.push({
+        month: month + 1,
+        year,
+        value: totalAmount >= 0 ? earnAmount : gaveAmount,
+      });
     }
 
-    res.json(monthlyData);
+    // Sort by year and then month
+    monthlyDataArray.sort((a, b) => {
+      if (a.year !== b.year) return a.year - b.year;
+      return a.month - b.month;
+    });
+
+    // Convert to object with "MM-YYYY": value
+    const sortedMonthlyData = {};
+    monthlyDataArray.forEach(({ month, year, value }) => {
+      sortedMonthlyData[`${month}-${year}`] = value;
+    });
+
+    res.json(sortedMonthlyData);
   } catch (error) {
     console.error("Error fetching transactions:", error);
     res.status(500).json({ error: "Error fetching transactions" });

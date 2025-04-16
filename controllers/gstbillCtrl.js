@@ -63,7 +63,7 @@ const createBills = async (req, res) => {
     ]);
 
     let addNewCustomer;
-    if (!customer || customer.length < 1) {
+    if (customer.length < 1) {
       addNewCustomer = await new customerModel({
         name: name,
         phone: customerNo,
@@ -78,7 +78,7 @@ const createBills = async (req, res) => {
       );
     }
 
-    if (customer || addNewCustomer) {
+    if (customer.length > 0 || addNewCustomer) {
       if (addNewCustomer) {
         customer = [addNewCustomer];
       }
