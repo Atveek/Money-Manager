@@ -144,8 +144,6 @@ async function addCustomerTransaction(req, res) {
       { new: true }
     );
 
-    
-
     res.status(201).send("Transaction Created");
   } catch (err) {
     console.error(err);
@@ -220,16 +218,17 @@ async function analyser(req, res) {
       );
 
       const transactions = await transectionModel.find({
-        type: "gave",
+        type: { $in: ["gave","earn"] },
         userid: userId,
         date: { $gte: firstDayOfMonth, $lte: lastDayOfMonth },
       });
 
-      const totalAmount = transactions.reduce(
-        (total, transaction) => total + transaction.amount,
-        0
-      );
-      monthlyData[`${date.getMonth() + 1}-${date.getFullYear()}`] = totalAmount;
+     const earnAmount = transactions.filter(tx => tx.type === "earn").reduce((total, tx) => total + tx.amount, 0);
+
+      const gaveAmount = transactions.filter(tx => tx.type === "gave").reduce((total, tx) => total + tx.amount, 0);
+
+      const totalAmount = earnAmount - gaveAmount;
+      monthlyData[`${date.getMonth() + 1}-${date.getFullYear()}`] = totalAmount >= 0 ? earnAmount:gaveAmount;
     }
 
     res.json(monthlyData);
@@ -238,6 +237,7 @@ async function analyser(req, res) {
     res.status(500).json({ error: "Error fetching transactions" });
   }
 }
+
 async function getSupplierTransaction(req, res) {
   try {
     const supplierid = req.headers["supplierid"];
@@ -281,11 +281,9 @@ async function profit(req, res) {
       );
 
       const transactions = await transectionModel.find({
-        $or: [{ type: "gave" }, { type: "got" }],
         userid: userId,
         date: { $gte: firstDayOfMonth, $lte: lastDayOfMonth },
       });
-      console.log(transactions);
       const totalAmount = transactions.reduce(
         (total, transaction) =>
           total +
@@ -294,20 +292,30 @@ async function profit(req, res) {
             : -transaction.amount),
         0
       );
-      console.log(totalAmount);
 
-      const customeramout = transactions.reduce(
-        (total, transaction) =>
-          total + (transaction.type === "gave") ? +transaction.amount : +0,
-        0
-      );
-      const supplieramount = transactions.reduce(
-        (total, transaction) =>
-          total + (transaction.type === "got") ? +transaction.amount : +0,
-        0
-      );
+       // CUSTOMER DATA
+      const customerGave = transactions
+        .filter(tx => tx.type === "gave")
+        .reduce((total, tx) => total + tx.amount, 0);
+
+      const customerEarn = transactions
+        .filter(tx => tx.type === "earn")
+        .reduce((total, tx) => total + tx.amount, 0);
+      
+
+      const customeramout = customerEarn - customerGave >= 0 ? customerEarn : customerGave;
+
+       const supplierGive = transactions
+        .filter(tx => tx.type === "give")
+        .reduce((total, tx) => total + tx.amount, 0);
+
+      const supplierGot = transactions
+        .filter(tx => tx.type === "got")
+        .reduce((total, tx) => total + tx.amount, 0);
+      
+      const supplieramount = (supplierGive - supplierGot) >=0 ?supplierGive:supplierGot 
       monthlyData[`${date.getMonth() + 1}-${date.getFullYear()}`] = {
-        ptofit: totalAmount,
+        ptofit: customeramout-supplieramount,
         customeramout: customeramout,
         supplieramount: supplieramount,
       };
