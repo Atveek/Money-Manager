@@ -1,4 +1,8 @@
+const { Mongoose, Types } = require("mongoose");
+const customerModel = require("../models/customerModel");
 const gstBillModel = require("../models/gstBillModel");
+const transectionModel = require("../models/transectionModel");
+const userModel = require("../models/userModel");
 
 const gstCalculator = (items) => {
   let totalAmount = 0,
@@ -26,9 +30,7 @@ const createBills = async (req, res) => {
   try {
     const { totalAmount, totalDiscount, totalGstAmount } = gstCalculator(items);
 
-    console.log(userId);
-
-    const bill = await gstBillModel({
+    const bill = new gstBillModel({
       userId,
       customerNo,
       name,
@@ -40,51 +42,127 @@ const createBills = async (req, res) => {
 
     await bill.save();
 
+    let customer = await customerModel.aggregate([
+      {
+        $match: { phone: customerNo }
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "_id",
+          foreignField: "customers",
+          as: "user"
+        }
+      },
+      { $unwind: "$user" },
+      {
+        $match: {
+          "user._id": Types.ObjectId(userId)
+        }
+      }
+    ]);
+
+    let addNewCustomer;
+    if (!customer || customer.length < 1) {
+      addNewCustomer = await new customerModel({
+        name: name,
+        phone: customerNo,
+        email: "",
+        transections: []
+      }).save();
+
+      await userModel.findOneAndUpdate(
+        { _id: userId },
+        { $addToSet: { customers: addNewCustomer._id } },
+        { new: true }
+      );
+    }
+
+    if (customer || addNewCustomer) {
+      if (addNewCustomer) {
+        customer = [addNewCustomer];
+      }
+
+      console.log("customer1 : ",customer[0] )
+      const transaction =  new transectionModel({
+        userid: userId,
+        amount: totalAmount,
+        type: "earn",
+        refrence: items[0].itemName,
+        description: items[0].itemName,
+        date: Date()
+      })
+      await transaction.save();
+
+      bill.transactionId = transaction._id;
+      await bill.save()
+
+      console.log("transaction : ",transaction )
+      const addTransaction = await customerModel.findOneAndUpdate(
+        { _id: customer[0]._id },
+        { $addToSet: { transections: transaction._id } },
+        { new: true }
+      );
+    }
+
     res.status(200).json({
       message: {
-        bill,
-      },
+        bill
+      }
     });
+
   } catch (err) {
     console.log("Error in  create Bill function", err);
     res.status(500).json("Internal server error");
   }
 };
+
 const updateBills = async (req, res) => {
+  const userId = req.user.userid;
   const id = req.params.id;
   const { customerNo, name, items } = req.body;
 
   try {
-    // Find the existing bill
+    // Step 1: Find the existing bill
     const bill = await gstBillModel.findById(id);
     if (!bill) {
-      return res.status(400).json({ message: "Please provide valid details" });
+      return res.status(400).json({ message: "Please provide valid bill ID" });
     }
 
-    // Update bill fields
+    // Step 2: Recalculate totals
+    const { totalAmount, totalDiscount, totalGstAmount } = gstCalculator(items);
+
+    // Step 3: Update the bill
     bill.customerNo = customerNo;
     bill.name = name;
     bill.items = items;
-
-    // Recalculate totals
-    const { totalAmount, totalDiscount, totalGstAmount } = gstCalculator(items);
     bill.totalAmount = totalAmount;
     bill.totalDiscount = totalDiscount;
     bill.totalGstAmount = totalGstAmount;
-
-    // Save the updated bill
     await bill.save();
+
+    // Step 4: Update related transaction if exists
+    if (bill.transactionId) {
+      const transaction = await transectionModel.findById(bill.transactionId);
+      if (transaction) {
+        transaction.amount = totalAmount;
+        transaction.refrence = items[0].itemName;
+        transaction.description = items[0].itemName;
+        transaction.date = Date();
+        await transaction.save();
+      }
+    }
 
     res.status(200).json({
       message: {
         bill,
       },
     });
+
   } catch (err) {
     console.error("Error in updateBills function", err);
     res.status(500).json({ message: "Internal server error" });
-  }
-};
+  }};
 
 const getAllBills = async (req, res) => {
   const userId = req.user.userid;

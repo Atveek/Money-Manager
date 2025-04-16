@@ -45,6 +45,10 @@ const gstBillSchema = new mongoose.Schema(
     totalGstAmount: {
       type: Number,
     },
+    transactionId: {
+      type: mongoose.Types.ObjectId,
+      ref: "transections",
+    },
   },
   {
     timestamps: true,

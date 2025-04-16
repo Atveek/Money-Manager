@@ -9,8 +9,8 @@ const supplierSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: [true, "email is required and should be unique"],
-      unique: true,
+      // required: [true, "email is required and should be unique"],
+      // unique: true,
     },
     phone: {
       type: Number,
