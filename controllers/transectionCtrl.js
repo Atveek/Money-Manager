@@ -3,6 +3,7 @@ const transectionModel = require("../models/transectionModel");
 const moment = require("moment");
 const userModel = require("../models/userModel");
 const supplierModel = require("../models/supplierModel");
+
 const getAllTransection = async (req, res) => {
   try {
     const { frequency, selectedDate, type } = req.body;
@@ -24,8 +25,7 @@ const getAllTransection = async (req, res) => {
     });
     res.status(200).json(transections);
   } catch (error) {
-    console.log(error);
-    res.status(500).json(erorr);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -42,7 +42,6 @@ const getAllTransection = async (req, res) => {
 async function deleteTransection(req, res) {
   try {
     const transactionId = req.body.transacationId; // Corrected variable name
-    console.log(transactionId);
     const transaction = await transectionModel.findById({ _id: transactionId }); // Changed find to findById to directly find by ID
     if (!transaction) {
       return res.status(404).send("Transaction not found");
@@ -71,8 +70,7 @@ async function deleteTransection(req, res) {
     await transectionModel.findOneAndDelete({ _id: req.body.transacationId });
     res.status(200).send("Transaction Deleted!");
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 // const editTransection = async (req, res) => {
@@ -96,22 +94,18 @@ const editTransection = async (req, res) => {
   try {
     const transactionId = req.body.transacationId; // Corrected variable name
     const payload = req.body.payload; // Corrected variable name
-    console.log(transactionId);
-    console.log(payload);
 
     const result = await transectionModel.findOneAndUpdate(
       { _id: transactionId },
       payload, // Used the payload directly without wrapping it in an object
       { new: true } // Added { new: true } to return the updated document
     );
-    console.log(result);
     if (!result) {
       return res.status(404).send("Transaction not found"); // Added check if the transaction doesn't exist
     }
     res.status(200).send("Edit Successfully");
   } catch (error) {
-    console.error(error);
-    res.status(500).json(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -122,31 +116,29 @@ const addTransection = async (req, res) => {
     await newTransection.save();
     res.status(201).send("Transection Created");
   } catch (error) {
-    console.log(error);
-    res.status(500).json(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
 async function addCustomerTransaction(req, res) {
   try {
     const userid = req.user.userid;
-    console.log(userid);
     const customerid = req.headers["customerid"];
-    console.log(customerid);
     const newTransaction = new transectionModel({
       userid: userid,
       ...req.body, // Spread the request body to populate other fields
     });
     const result = await newTransaction.save();
+
     await customerModel.findByIdAndUpdate(
       customerid,
       { $addToSet: { transections: result._id } },
       { new: true }
     );
+
     res.status(201).send("Transaction Created");
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 
@@ -170,17 +162,14 @@ async function getCustomerTransaction(req, res) {
 
     res.send(transectionList);
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 
 async function addSupplierTransaction(req, res) {
   try {
     const userid = req.user.userid;
-    console.log(userid);
     const supplierid = req.headers["supplierid"];
-    console.log(supplierid);
     const newTransaction = new transectionModel({
       userid: userid,
       ...req.body, // Spread the request body to populate other fields
@@ -193,8 +182,7 @@ async function addSupplierTransaction(req, res) {
     );
     res.status(201).send("Transaction Created");
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 
@@ -217,24 +205,30 @@ async function analyser(req, res) {
       );
 
       const transactions = await transectionModel.find({
-        type: "gave",
+        type: { $in: ["gave", "earn"] },
         userid: userId,
         date: { $gte: firstDayOfMonth, $lte: lastDayOfMonth },
       });
 
-      const totalAmount = transactions.reduce(
-        (total, transaction) => total + transaction.amount,
-        0
-      );
-      monthlyData[`${date.getMonth() + 1}-${date.getFullYear()}`] = totalAmount;
+      const earnAmount = transactions
+        .filter((tx) => tx.type === "earn")
+        .reduce((total, tx) => total + tx.amount, 0);
+
+      const gaveAmount = transactions
+        .filter((tx) => tx.type === "gave")
+        .reduce((total, tx) => total + tx.amount, 0);
+
+      const totalAmount = earnAmount - gaveAmount;
+      monthlyData[`${date.getMonth() + 1}-${date.getFullYear()}`] =
+        totalAmount >= 0 ? earnAmount : gaveAmount;
     }
 
     res.json(monthlyData);
   } catch (error) {
-    console.error("Error fetching transactions:", error);
-    res.status(500).json({ error: "Error fetching transactions" });
+    res.status(500).json({ message: "Error fetching transactions" });
   }
 }
+
 async function getSupplierTransaction(req, res) {
   try {
     const supplierid = req.headers["supplierid"];
@@ -255,8 +249,7 @@ async function getSupplierTransaction(req, res) {
 
     res.send(transectionList);
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal Server Error");
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 async function profit(req, res) {
@@ -278,11 +271,9 @@ async function profit(req, res) {
       );
 
       const transactions = await transectionModel.find({
-        $or: [{ type: "gave" }, { type: "got" }],
         userid: userId,
         date: { $gte: firstDayOfMonth, $lte: lastDayOfMonth },
       });
-      console.log(transactions);
       const totalAmount = transactions.reduce(
         (total, transaction) =>
           total +
@@ -291,20 +282,31 @@ async function profit(req, res) {
             : -transaction.amount),
         0
       );
-      console.log(totalAmount);
 
-      const customeramout = transactions.reduce(
-        (total, transaction) =>
-          total + (transaction.type === "gave") ? +transaction.amount : +0,
-        0
-      );
-      const supplieramount = transactions.reduce(
-        (total, transaction) =>
-          total + (transaction.type === "got") ? +transaction.amount : +0,
-        0
-      );
+      // CUSTOMER DATA
+      const customerGave = transactions
+        .filter((tx) => tx.type === "gave")
+        .reduce((total, tx) => total + tx.amount, 0);
+
+      const customerEarn = transactions
+        .filter((tx) => tx.type === "earn")
+        .reduce((total, tx) => total + tx.amount, 0);
+
+      const customeramout =
+        customerEarn - customerGave >= 0 ? customerEarn : customerGave;
+
+      const supplierGive = transactions
+        .filter((tx) => tx.type === "give")
+        .reduce((total, tx) => total + tx.amount, 0);
+
+      const supplierGot = transactions
+        .filter((tx) => tx.type === "got")
+        .reduce((total, tx) => total + tx.amount, 0);
+
+      const supplieramount =
+        supplierGive - supplierGot >= 0 ? supplierGive : supplierGot;
       monthlyData[`${date.getMonth() + 1}-${date.getFullYear()}`] = {
-        ptofit: totalAmount,
+        ptofit: customeramout - supplieramount,
         customeramout: customeramout,
         supplieramount: supplieramount,
       };
@@ -312,8 +314,7 @@ async function profit(req, res) {
 
     res.json(monthlyData);
   } catch (err) {
-    res.status(500).send("Internal Server Error");
-    console.log(err);
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 

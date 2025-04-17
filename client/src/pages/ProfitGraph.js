@@ -6,6 +6,7 @@ const ProfitAnalysis = () => {
   const [monthlyData, setMonthlyData] = useState({});
   const [yearlyData, setYearlyData] = useState({});
   const [showMonthly, setShowMonthly] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const token = JSON.parse(localStorage.getItem("token"));
   const customertoken = token.token;
 
@@ -16,6 +17,7 @@ const ProfitAnalysis = () => {
           console.error("Token not found");
           return;
         }
+        setIsLoading(true);
         const response = await axios.get("/api/v1/transections/profit", {
           headers: {
             token: customertoken,
@@ -41,6 +43,8 @@ const ProfitAnalysis = () => {
         });
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -57,12 +61,12 @@ const ProfitAnalysis = () => {
       {
         label: "Monthly Profit Analysis",
         backgroundColor: [
-          "#1a237e", // Dark blue
-          "#4a148c", // Dark purple
-          "rgba(255, 206, 86, 0.6)",
-          "rgba(75, 192, 192, 0.6)",
-          "rgba(153, 102, 255, 0.6)",
-          "rgba(255, 159, 64, 0.6)",
+          "#4a90e2", // Blue
+          "#50c878", // Green
+          "#f39c12", // Orange
+          "#9b59b6", // Purple
+          "#3498db", // Light Blue
+          "#e74c3c", // Red
         ],
         data: Object.values(monthlyData).map((item) => item.ptofit),
       },
@@ -74,59 +78,173 @@ const ProfitAnalysis = () => {
     datasets: [
       {
         label: "Yearly Profit Analysis",
-        backgroundColor: ["green", "red"],
+        backgroundColor: ["#50c878", "#e74c3c"],
         data: [yearlyData.customerAmount, yearlyData.supplierAmount],
       },
     ],
   };
 
   return (
-    <div style={{ display: "inline-block", width: "30vw" }}>
-      <div>
-        <h2>
-          {showMonthly ? "Monthly Profit Analysis" : "Yearly Profit Analysis"}
-        </h2>
-        {showMonthly ? (
-          <Pie data={monthlyChartData} style={{ width: "30vw" }} />
+    <div
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        padding: "1.5rem",
+      }}
+    >
+      <h2
+        style={{
+          fontSize: "1.5rem",
+          color: "#2c3e50",
+          marginBottom: "1.5rem",
+          fontWeight: "600",
+          textAlign: "center",
+        }}
+      >
+        {showMonthly ? "Monthly Profit Analysis" : "Yearly Profit Analysis"}
+      </h2>
+
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          backgroundColor: "#f8fafc",
+          borderRadius: "12px",
+          padding: "1.5rem",
+        }}
+      >
+        {isLoading ? (
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "#64748b",
+            }}
+          >
+            Loading data...
+          </div>
         ) : (
-          <Pie data={yearlyChartData} style={{}} />
+          <>
+            <div
+              style={{
+                maxWidth: "400px",
+                margin: "0 auto 1.5rem auto",
+              }}
+            >
+              {showMonthly ? (
+                <Pie data={monthlyChartData} />
+              ) : (
+                <Pie data={yearlyChartData} />
+              )}
+            </div>
+
+            <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+              <button
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: "#4a90e2",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "8px",
+                  fontSize: "0.9rem",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                }}
+                onClick={handleToggleData}
+              >
+                {showMonthly ? "Show Yearly Data" : "Show Monthly Data"}
+              </button>
+            </div>
+
+            {!showMonthly && (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                  gap: "1rem",
+                  padding: "1rem",
+                  backgroundColor: "white",
+                  borderRadius: "8px",
+                  boxShadow: "0 1px 3px rgba(0, 0, 0, 0.05)",
+                }}
+              >
+                <div style={{ textAlign: "center" }}>
+                  <p
+                    style={{
+                      fontSize: "0.9rem",
+                      color: "#64748b",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    Customer Amount
+                  </p>
+                  <p
+                    style={{
+                      fontSize: "1.25rem",
+                      fontWeight: "600",
+                      color: "#50c878",
+                      margin: 0,
+                    }}
+                  >
+                    ${yearlyData.customerAmount?.toLocaleString()}
+                  </p>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <p
+                    style={{
+                      fontSize: "0.9rem",
+                      color: "#64748b",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    Supplier Amount
+                  </p>
+                  <p
+                    style={{
+                      fontSize: "1.25rem",
+                      fontWeight: "600",
+                      color: "#e74c3c",
+                      margin: 0,
+                    }}
+                  >
+                    ${yearlyData.supplierAmount?.toLocaleString()}
+                  </p>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <p
+                    style={{
+                      fontSize: "0.9rem",
+                      color: "#64748b",
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    Net Profit
+                  </p>
+                  <p
+                    style={{
+                      fontSize: "1.25rem",
+                      fontWeight: "600",
+                      color: "#4a90e2",
+                      margin: 0,
+                    }}
+                  >
+                    $
+                    {(
+                      yearlyData.customerAmount - yearlyData.supplierAmount
+                    )?.toLocaleString()}
+                  </p>
+                </div>
+              </div>
+            )}
+          </>
         )}
-        <button
-          className="button"
-          style={{
-            marginTop: "10px",
-          }}
-          onClick={handleToggleData}
-        >
-          {showMonthly ? "Show Yearly Data" : "Show Monthly Data"}
-        </button>
       </div>
-      {!showMonthly && (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            width: "650px",
-            gap: 1,
-            fontSize: "20px",
-          }}
-        >
-          <p>
-            Yearly Customer Amount:{" "}
-            <b style={{ color: "green" }}>{yearlyData.customerAmount}</b>
-          </p>
-          <p>
-            Yearly Supplier Amount:{" "}
-            <b style={{ color: "red" }}>{yearlyData.supplierAmount}</b>
-          </p>
-          <p>
-            Yearly Profit Amount:{" "}
-            <b style={{ color: "blue" }}>
-              {yearlyData.customerAmount - yearlyData.supplierAmount}
-            </b>
-          </p>
-        </div>
-      )}
     </div>
   );
 };

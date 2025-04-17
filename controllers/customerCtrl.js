@@ -8,17 +8,14 @@ async function AddCustomer(req, res) {
     const savedCustomer = await newCustomer.save();
 
     // Fetch the user document
-    const user = await userModel.findById(userId);
+    const user = await userModel.findByIdAndUpdate(
+      userId,
+      { $push: { customers: savedCustomer._id } },
+      { new: true }
+    );
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-
-    // Add the new customer to the beginning of the user's `customers` array
-    user.customers.unshift(savedCustomer._id);
-    await user.save();
-
-    console.log("New Customer Added:", savedCustomer);
-    console.log("Updated User Document:", user);
 
     res.status(201).json(savedCustomer);
   } catch (err) {

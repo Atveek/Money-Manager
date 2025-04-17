@@ -6,7 +6,6 @@ async function Addsupplier(req, res) {
     const userId = req.user.userid; // Assuming `userid` is the correct property name to get the user ID
     const newsupplier = new supplierModel(req.body); // Create a new supplier object
     const savedsupplier = await newsupplier.save(); // Save the new supplier to the database
-    console.log(savedsupplier);
     await userModel.findByIdAndUpdate(
       userId,
       { $addToSet: { suppliers: savedsupplier._id } }, // Add the newly created supplier's ID to the user's `suppliers` array

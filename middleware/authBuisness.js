@@ -5,8 +5,7 @@ const authBuisness = (req, res, next) => {
   const token = req.headers["token"];
 
   if (!token) {
-    console.log("token not found");
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: "Token not found" });
   }
 
   jwt.verify(token, secret, (err, user) => {
@@ -15,11 +14,9 @@ const authBuisness = (req, res, next) => {
     } else {
       if (user.role === "business") {
         req.user = user;
-        console.log(user);
         next();
       } else {
-        console.log("role not found");
-        return res.status(401).json({ message: "Unauthorized" });
+        return res.status(401).json({ message: "Role not found" });
       }
     }
   });

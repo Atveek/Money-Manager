@@ -39,30 +39,30 @@ const HomePage = () => {
       });
     } catch (error) {
       setLoading(false);
-      console.log(error);
-      message.error("Unable to delete");
+      message.error("unable to delete");
     }
   };
 
   const handleSubmit = async (values) => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
+      console.log(user.id);
       setLoading(true);
       setRefresh(true);
       if (editable) {
         await axios.post("/api/v1/transections/edit-transection", {
           payload: {
             ...values,
-            userId: user._id,
+            userId: user.id,
           },
-          transacationId: editable._id,
+          transacationId: editable.id,
         });
         setLoading(false);
         message.success("Transaction Updated Successfully");
       } else {
         await axios.post("/api/v1/transections/add-transection", {
           ...values,
-          userid: user._id,
+          userid: user.id,
         });
         setLoading(false);
         message.success("Transaction Added Successfully");
@@ -82,12 +82,13 @@ const HomePage = () => {
         const user = JSON.parse(localStorage.getItem("user"));
         setLoading(true);
         const res = await axios.post("/api/v1/transections/get-transection", {
-          userid: user._id,
+          userid: user.id,
           frequency,
           selectedDate,
           type,
         });
         setAllTransection(res.data);
+
         setLoading(false);
         setRefresh(false);
       } catch (error) {
@@ -289,90 +290,112 @@ const HomePage = () => {
                 onSubmit={(e) => {
                   e.preventDefault();
                   const formData = new FormData(e.target);
-                  const values = Object.fromEntries(formData.entries());
+                  const values = {
+                    amount: formData.get("amount"),
+                    type: formData.get("type"),
+                    category: formData.get("category"),
+                    refrence: formData.get("refrence"),
+                    description: formData.get("description"),
+                    date:
+                      formData.get("date") ||
+                      new Date().toISOString().split("T")[0],
+                  };
                   handleSubmit(values);
                 }}
+                className="space-y-4"
               >
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Amount
-                    </label>
-                    <input
-                      name="amount"
-                      type="text"
-                      required
-                      defaultValue={editable?.amount}
-                      className="w-full rounded-lg border-gray-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Type
-                    </label>
-                    <select
-                      name="type"
-                      required
-                      defaultValue={editable?.type}
-                      className="w-full rounded-lg border-gray-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
-                    >
-                      <option value="income">Income</option>
-                      <option value="expense">Expense</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Category
-                    </label>
-                    <input
-                      name="category"
-                      type="text"
-                      required
-                      defaultValue={editable?.category}
-                      className="w-full rounded-lg border-gray-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Date
-                    </label>
-                    <input
-                      name="date"
-                      type="date"
-                      required
-                      defaultValue={
-                        editable?.date
-                          ? moment(editable.date).format("YYYY-MM-DD")
-                          : ""
-                      }
-                      className="w-full rounded-lg border-gray-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Reference
-                    </label>
-                    <input
-                      name="refrence"
-                      type="text"
-                      required
-                      defaultValue={editable?.refrence}
-                      className="w-full rounded-lg border-gray-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Description
-                    </label>
-                    <input
-                      name="description"
-                      type="text"
-                      required
-                      defaultValue={editable?.description}
-                      className="w-full rounded-lg border-gray-200 px-4 py-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Amount*
+                  </label>
+                  <input
+                    type="number"
+                    name="amount"
+                    required
+                    defaultValue={editable?.amount}
+                    className="w-full rounded-lg border-gray-200 p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="Enter amount"
+                  />
                 </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Type*
+                  </label>
+                  <select
+                    name="type"
+                    required
+                    defaultValue={editable?.type || "expense"}
+                    className="w-full rounded-lg border-gray-200 p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
+                  >
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Category
+                  </label>
+                  <select
+                    name="category"
+                    defaultValue={editable?.category || "other"}
+                    className="w-full rounded-lg border-gray-200 p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
+                  >
+                    <option value="salary">Salary</option>
+                    <option value="food">Food</option>
+                    <option value="transportation">Transportation</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="shopping">Shopping</option>
+                    <option value="utilities">Utilities</option>
+                    <option value="healthcare">Healthcare</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Reference
+                  </label>
+                  <input
+                    type="text"
+                    name="refrence"
+                    defaultValue={editable?.refrence}
+                    className="w-full rounded-lg border-gray-200 p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="Enter reference"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Description
+                  </label>
+                  <textarea
+                    name="description"
+                    defaultValue={editable?.description}
+                    className="w-full rounded-lg border-gray-200 p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="Enter description"
+                    rows="3"
+                  ></textarea>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Date*
+                  </label>
+                  <input
+                    type="date"
+                    name="date"
+                    required
+                    defaultValue={
+                      editable?.date
+                        ? new Date(editable.date).toISOString().split("T")[0]
+                        : new Date().toISOString().split("T")[0]
+                    }
+                    className="w-full rounded-lg border-gray-200 p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
+                  />
+                </div>
+
                 <div className="mt-6 flex justify-end space-x-3">
                   <button
                     type="button"

@@ -8,9 +8,8 @@ export default function BusinessLayout({ children }) {
       <Header />
       <div className="container-fluid">
         <div className="row">
-          <div className="col-1 p-0">
-            <BusinessNavbar />
-          </div>
+          <BusinessNavbar />
+          <div className="col-1 p-0"></div>
           <div className="col">{children}</div>
         </div>
       </div>
