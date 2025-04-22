@@ -4,6 +4,7 @@ const {
   registerController,
   totalcustomer,
   totalsupplier,
+  verifyEmail,
 } = require("../controllers/userController");
 const { authBuisness } = require("../middleware/authBuisness");
 //router object
@@ -17,5 +18,7 @@ router.post("/login", loginController);
 router.post("/register", registerController);
 router.get("/customer", authBuisness, totalcustomer);
 router.get("/supplier", authBuisness, totalsupplier);
+router.post("/verify-email", verifyEmail);
+
 
 module.exports = router;
