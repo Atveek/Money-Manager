@@ -234,7 +234,7 @@ export default function SupplierDetail({
               variant="contained"
               className={`${classes.actionButton} ${classes.gaveButton}`}
               onClick={() => {
-                setType("gave");
+                setType("give");
                 setIsOpen(true);
               }}
             >
@@ -244,7 +244,7 @@ export default function SupplierDetail({
               variant="contained"
               className={`${classes.actionButton} ${classes.gotButton}`}
               onClick={() => {
-                setType("earn");
+                setType("got");
                 setIsOpen(true);
               }}
             >

@@ -55,7 +55,7 @@ const HomePage = () => {
             ...values,
             userId: user.id,
           },
-          transacationId: editable.id,
+          transacationId: editable._id,
         });
         setLoading(false);
         message.success("Transaction Updated Successfully");
@@ -109,7 +109,7 @@ const HomePage = () => {
       dataIndex: "amount",
       render: (amount) => (
         <span className="font-semibold">
-          ${Number(amount).toLocaleString()}
+          ₹{Number(amount).toLocaleString()}
         </span>
       ),
     },
@@ -334,25 +334,27 @@ const HomePage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Category
-                  </label>
-                  <select
-                    name="category"
-                    defaultValue={editable?.category || "other"}
-                    className="w-full rounded-lg border-gray-200 p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
-                  >
-                    <option value="salary">Salary</option>
-                    <option value="food">Food</option>
-                    <option value="transportation">Transportation</option>
-                    <option value="entertainment">Entertainment</option>
-                    <option value="shopping">Shopping</option>
-                    <option value="utilities">Utilities</option>
-                    <option value="healthcare">Healthcare</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-
+  <label className="block text-sm font-medium text-gray-700 mb-1">
+    Category
+  </label>
+  <input
+    list="category-options"
+    name="category"
+    defaultValue={editable?.category}
+    className="w-full rounded-lg border-gray-200 p-2.5 text-sm focus:border-blue-500 focus:ring-blue-500"
+    placeholder="Select or type a category"
+  />
+  <datalist id="category-options">
+    <option value="salary" />
+    <option value="food" />
+    <option value="transportation" />
+    <option value="entertainment" />
+    <option value="shopping" />
+    <option value="utilities" />
+    <option value="healthcare" />
+    <option value="other" />
+  </datalist>
+</div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Reference

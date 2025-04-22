@@ -61,7 +61,7 @@ const TransactionAnalysis = () => {
           alignItems: "center",
           backgroundColor: "#f8fafc",
           borderRadius: "12px",
-          padding: "1.5rem",
+          // padding: "1.5rem",
           minHeight: "400px",
         }}
       >

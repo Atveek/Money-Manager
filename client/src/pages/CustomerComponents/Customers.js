@@ -161,14 +161,14 @@ export default function Customers({
           </ListItem>
           {customers.map((customer) => (
             <ListItem
-              key={customer[0]._id}
-              onClick={() => clickevent(customer[0])}
+              key={customer._id}
+              onClick={() => clickevent(customer)}
               button
               className={classes.listItem}
             >
-              <Avatar className={classes.avatar}>{customer[0].name[0]}</Avatar>
+              <Avatar className={classes.avatar}>{customer.name[0]}</Avatar>
               <ListItemText
-                primary={customer[0].name}
+                primary={customer.name}
                 className={classes.listItemText}
               />
             </ListItem>

@@ -30,7 +30,7 @@ export default function BusinessHome() {
               elevation={3}
               sx={{
                 height: "100%",
-                minHeight: "600px",
+                // minHeight: "600px",
                 borderRadius: "16px",
                 background: "linear-gradient(145deg, #ffffff, #f8fafc)",
                 transition:
@@ -56,7 +56,7 @@ export default function BusinessHome() {
               elevation={3}
               sx={{
                 height: "100%",
-                minHeight: "600px",
+                // minHeight: "600px",
                 borderRadius: "16px",
                 background: "linear-gradient(145deg, #ffffff, #f8fafc)",
                 transition:

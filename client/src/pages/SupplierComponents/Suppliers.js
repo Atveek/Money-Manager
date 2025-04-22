@@ -161,14 +161,14 @@ export default function Supplier({
           </ListItem>
           {suppliers.map((supplier) => (
             <ListItem
-              key={supplier[0]._id}
-              onClick={() => clickevent(supplier[0])}
+              key={supplier._id}
+              onClick={() => clickevent(supplier)}
               button
               className={classes.listItem}
             >
-              <Avatar className={classes.avatar}>{supplier[0].name[0]}</Avatar>
+              <Avatar className={classes.avatar}>{supplier.name[0]}</Avatar>
               <ListItemText
-                primary={supplier[0].name}
+                primary={supplier.name}
                 className={classes.listItemText}
               />
             </ListItem>

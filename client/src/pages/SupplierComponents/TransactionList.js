@@ -138,8 +138,10 @@ export default function TransactionList({
 
   const handleDeleteTransaction = async (transactionId) => {
     try {
-      await axios.delete(
-        `/api/v1/transections/delete-transection/${transactionId}`,
+      await axios.post(
+        `/api/v1/transections/delete-transection`, {
+        transacationId: transactionId,
+      },
         {
           headers: {
             token: token.token,

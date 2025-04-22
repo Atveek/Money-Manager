@@ -3,7 +3,13 @@ const customerModel = require("../models/customerModel");
 const supplierModel = require("../models/supplierModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const secret = process.env.secret;
+const {
+  sendVerificationEmail,
+  sendWelcomeEmail,
+} = require("../middleware/Email");
+
 const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;

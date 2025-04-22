@@ -334,7 +334,7 @@ async function profit(req, res) {
         .filter(tx => tx.type === "got")
         .reduce((total, tx) => total + tx.amount, 0);
       
-      const supplieramount = (supplierGive - supplierGot) >=0 ?supplierGive:supplierGot 
+      const supplieramount = (supplierGot -supplierGive ) >=0 ?supplierGot :supplierGive
       monthlyData[`${date.getMonth() + 1}-${date.getFullYear()}`] = {
         ptofit: customeramout-supplieramount,
         customeramout: customeramout,

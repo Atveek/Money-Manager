@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Pie } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const ProfitAnalysis = () => {
   const [monthlyData, setMonthlyData] = useState({});
@@ -61,12 +69,8 @@ const ProfitAnalysis = () => {
       {
         label: "Monthly Profit Analysis",
         backgroundColor: [
-          "#4a90e2", // Blue
-          "#50c878", // Green
-          "#f39c12", // Orange
-          "#9b59b6", // Purple
-          "#3498db", // Light Blue
-          "#e74c3c", // Red
+          "#4a90e2", "#50c878", "#f39c12",
+          "#9b59b6", "#3498db", "#e74c3c",
         ],
         data: Object.values(monthlyData).map((item) => item.ptofit),
       },
@@ -82,6 +86,38 @@ const ProfitAnalysis = () => {
         data: [yearlyData.customerAmount, yearlyData.supplierAmount],
       },
     ],
+  };
+
+  const chartOptions = {
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            const label = context.label || '';
+            const value = context.parsed;
+            return `${label}: ₹${value.toLocaleString()}`;
+          },
+        },
+      },
+      legend: {
+        labels: {
+          generateLabels: function (chart) {
+            const data = chart.data;
+            return data.labels.map((label, i) => {
+              const value = data.datasets[0].data[i];
+              return {
+                text: `${label}: ₹${value.toLocaleString()}`,
+                fillStyle: data.datasets[0].backgroundColor[i],
+                strokeStyle: data.datasets[0].borderColor || 'transparent',
+                lineWidth: 1,
+                hidden: isNaN(value),
+                index: i,
+              };
+            });
+          },
+        },
+      },
+    },
   };
 
   return (
@@ -136,9 +172,9 @@ const ProfitAnalysis = () => {
               }}
             >
               {showMonthly ? (
-                <Pie data={monthlyChartData} />
+                <Pie data={monthlyChartData} options={chartOptions} />
               ) : (
-                <Pie data={yearlyChartData} />
+                <Pie data={yearlyChartData} options={chartOptions} />
               )}
             </div>
 
@@ -192,7 +228,7 @@ const ProfitAnalysis = () => {
                       margin: 0,
                     }}
                   >
-                    ${yearlyData.customerAmount?.toLocaleString()}
+                    ₹{yearlyData.customerAmount?.toLocaleString()}
                   </p>
                 </div>
                 <div style={{ textAlign: "center" }}>
@@ -213,7 +249,7 @@ const ProfitAnalysis = () => {
                       margin: 0,
                     }}
                   >
-                    ${yearlyData.supplierAmount?.toLocaleString()}
+                    ₹{yearlyData.supplierAmount?.toLocaleString()}
                   </p>
                 </div>
                 <div style={{ textAlign: "center" }}>
@@ -234,7 +270,7 @@ const ProfitAnalysis = () => {
                       margin: 0,
                     }}
                   >
-                    $
+                    ₹
                     {(
                       yearlyData.customerAmount - yearlyData.supplierAmount
                     )?.toLocaleString()}
